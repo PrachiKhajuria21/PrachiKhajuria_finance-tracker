@@ -1,0 +1,17 @@
+const people = [
+    { month:"march",fromAccount:"Full Circle",date:"2023-05-04" },
+    { month:"april",fromAccount:"House Loan",date:"2023-05-04" },
+    { month:"april",fromAccount:"Full Circle",date:"2023-05-04" },
+    { month:"march",fromAccount:"Full Circle",date:"2023-05-04" },
+]
+
+function groupBy(objectArray, property) {
+  return objectArray.reduce(function (accumulator, currentObject) {
+    let key = currentObject[property];
+    if (!accumulator[key]) {
+      accumulator[key] = [];
+    }
+    accumulator[key].push(currentObject);
+    return accumulator;
+  }, {});
+}
