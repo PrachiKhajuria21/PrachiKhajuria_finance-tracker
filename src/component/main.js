@@ -23,7 +23,7 @@ export default function TableMerge() {
       return a;
     }, {});
     setGroupBy(get);
-    console.log("get", get);
+    // console.log("get", get);
     // setAllData([]);
   };
 

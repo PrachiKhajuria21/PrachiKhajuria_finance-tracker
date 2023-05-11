@@ -1,4 +1,4 @@
-import react, { useEffect, useForm, useRef, useState } from "react";
+import react, { useEffect, useRef, useState } from "react";
 import DropDown from "./DropDown";
 import {
   BrowserRouter as Router,
@@ -8,157 +8,106 @@ import {
   useLocation,
   Navigate,
 } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 export default function FormData({ state }) {
-  const INITIAL_STATE = {
-    date: "",
-    month: "",
-    transactionType: "",
-    fromAccount: "",
-    toAccount: "",
-    amount: "",
-    receipt: "",
-    id: 0,
-    receiptSize: 0,
-    notes: "",
-  };
 
-  const [formData, setFormData] = useState(INITIAL_STATE);
+  const dataMonth = [
+    "january",
+    "febrary",
+    "march",
+    "april",
+    "may",
+    "june",
+    "july",
+    "august",
+    "september",
+    "october",
+    "november",
+    "december",
+  ];
+  const dataTransactionType = [
+    "Home Expense",
+    "Personal Expense",
+    "Income Expense",
+  ];
+  const dataToAccount = [
+    "Personal Account",
+    "Real Living",
+    "My Dream Home",
+    "Full Circle",
+    "Core Realtors",
+    "Big Block",
+  ];
+  const dataFromAccount = [
+    "Personal Account",
+    "Real Living",
+    "My Dream Home",
+    "Full Circle",
+    "Core Realtors",
+    "Big Block",
+  ];
 
-  const location = useLocation();
-  const userId = location.state;
-  console.log("userID:::::::::", userId);
+ const fileTypee = ['png','jpeg','jpg'];
 
-  const localData = JSON.parse(localStorage.getItem("Data"));
-  console.log("localStorage data", localData);
-  // console.log("dataaaa inside form::::::: ",location.state)
 
-  const userData = localData.find(({ id }) => id === userId);
-  console.log("userData::::", userData);
-  // setFormData(userData);
+  const schema = yup.object().shape({
+    date: yup.string().required("date is required"),
+    month: yup.string().required("month is required"),
+    transactionType: yup.string().required("TransactionType is required"),
+    fromAccount: yup.string().required("From Account is required"),
+    toAccount: yup
+      .string()
+      .required("To Account is required")
+      .notOneOf(
+        [yup.ref("fromAccount")],
+        "Both the accounts should not be same"
+      ),
+    amount: yup
+      .number()
+      .required("Amount is required")
+      .min(1, "amount should be greater than 0"),
+    notes: yup
+      .string()
+      .required("Notes is required")
+      .max(250, "notes length should be less than 250"),
 
-  useEffect(() => {
-    if (userData !== undefined) {
-      setFormData(userData);
-      console.log("::::::", userData);
-    } else {
-      setFormData(INITIAL_STATE);
-    }
-  }, []);
+    receipt: yup.mixed().test("fileRequired", "This is required", (value) => {
+      if (value.length === 0) {
+        return false;
+      } else {
+        return true;
+      }
+    })
+    .test("fileSize","Size should not be greater than 1mb",(value) => {
+    //  console.log("size",value[0].size);
+     if(value[0]?.size > 1024 * 1024)
+     {
+        return false;
+     }
+     else
+     {
+        return true;
+     }
+    })
+    .test("fileType","Image type should be jpeg,png or jpg",(value) => 
+    {
+        if(fileTypee.includes(value[0]?.type.slice(6)))
+        {
+           return true;
+        }
+        else
+        {
+          return false;
+        }
+    })
+    ,
+  });
 
-  const [validation, setValidation] = useState({});
+
   const imageRef = useRef(null);
-
-  let errors = {};
-  const handleValue = (e) => {
-    if (e.target.name === "receipt") {
-      let fileSize = e.target.files[0].size;
-      setFormData((prev) => ({ ...prev, receiptSize: fileSize }));
-      console.log("1- ", e.target.value);
-      var filePath = e.target.value;
-      if (!filePath.match(/\.(jpg|jpeg|png|gif)$/)) {
-        alert("enter valid image");
-      }
-      // console.log("2- ",e.)
-      else {
-        const file = e.target.files[0];
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          setFormData((prev) => ({
-            ...prev,
-            receipt: reader.result.toString(),
-          }));
-        };
-        reader.readAsDataURL(file);
-      }
-    }
-    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
-
-  const validate = (value) => {
-    
-    if (!value.date) {
-      errors.date = "Date is required";
-    }
-    if (!value.month) {
-      errors.month = "Month is required";
-    }
-
-    if (!value.transactionType) {
-      errors.transactionType = "Transaction Type is required";
-    }
-    if (!value.fromAccount) {
-      errors.fromAccount = "From Account is required";
-    }
-
-    if (!value.toAccount) {
-      errors.toAccount = "To Account is required";
-    } else if (value.toAccount === value.fromAccount) {
-      errors.toAccount = "Both the accounts are not same";
-    }
-
-    if (!value.amount || value.amount === 0) {
-      errors.amount = "Amount is required and should be greater than 0";
-      console.log("amounnt::", value.amount);
-    }
-
-    if (!value.receipt) {
-      errors.receipt = "Receipt is required";
-    }
- 
-    if (value.receiptSize > 1024 * 1024) {
-      errors.receipt = "Limit exceeded";
-    }
-
-    if (!value.notes || value.notes.length > 250) {
-      errors.notes = "invalid notes length or notes are not required";
-    }
-
-    return errors;
-  };
-
-  const handleSubmit = (e) => {
- 
-
-    if (userData === undefined) {
-      console.log("HHHHHHHHHHHHHHHHHHH");
-     const errFunc = validate(formData);
-      // console.log("functionValue", validate(formData));
-      setValidation(errFunc);
-
-      const errorLength = Object.values(errFunc).filter((item) => item !== "");
-      console.log("error length", errorLength.length);
-
-      if (errorLength.length === 0) {
-        formData.id = localData.length + 1;
-        setFormData(formData.id);
-        console.log("formDataID: ", formData.id);
-
-        let array = JSON.parse(localStorage.getItem("Data") || "[]");
-        array.push(formData);
-
-        localStorage.setItem("Data", JSON.stringify(array));
-
-        console.log("Array::::", array);
-        Navigate("/")
-      }
-    } else {
-      console.log("hellloooooo");
-
-      let array = JSON.parse(localStorage.getItem("Data") || "[]");
-
-      array[userId - 1] = formData;
-
-      localStorage.setItem("Data", JSON.stringify(array));
-    }
-  };
-
-  console.log("formDataID", formData.id);
-  console.log("validation", validation);
-
-  const myvariable = {
-    color: "red",
-  };
 
   const backBtn = {
     color: "white",
@@ -170,6 +119,21 @@ export default function FormData({ state }) {
   const submitBtn = {
     marginLeft: "50%",
   };
+  const pTag = {
+    color: "red",
+  };
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({ resolver: yupResolver(schema) });
+
+  // let errorData = {};
+  
+
+  const onSubmit = (data) => console.log("new Form Data:::::::::::::", data);
+  console.log("eroor::::", errors);
 
   return (
     <div className="container">
@@ -177,130 +141,109 @@ export default function FormData({ state }) {
         <button style={backBtn}>Back</button>
       </Link>
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <div className="form-group mt-2">
           <label>Transaction Data: </label>
           <input
             type="date"
             className="form-control"
-            onChange={handleValue}
-            defaultValue={formData.date}
-            name="date"
-          />
+            {...register("date")}
+          ></input>
+          <p style={pTag}>{errors.date?.message}</p>
         </div>
-        <p style={myvariable}>{validation.date}</p>
+
         <div className="form-group mt-2">
           <label>Month-year: </label>
 
-          <DropDown
-            data={[
-              "january",
-              "febrary",
-              "march",
-              "april",
-              "may",
-              "june",
-              "july",
-              "august",
-              "september",
-              "october",
-              "november",
-              "december",
-            ]}
-            value={formData.month}
-            name="month"
-            setFormData={setFormData}
-          />
+          <select className="form-control" {...register("month")}>
+            <option value="">Select Option</option>
+            {dataMonth.map((data) => (
+              <option key={data} value={data}>
+                {data}
+              </option>
+            ))}
+          </select>
+          <p style={pTag}>{errors.month?.message}</p>
         </div>
-        <p style={myvariable}>{validation.month}</p>
         <div className="form-group mt-2">
           <label>Transaction Type: </label>
-          <DropDown
-            data={["Home Expense", "Personal Expense", "Income Expense"]}
-            name="transactionType"
-            setFormData={setFormData}
-            value={formData.transactionType}
-          />
+
+          <select className="form-control" {...register("transactionType")}>
+            <option value="">Select Option</option>
+            {dataTransactionType.map((data) => (
+              <option key={data} value={data}>
+                {data}
+              </option>
+            ))}
+          </select>
+          <p style={pTag}>{errors.transactionType?.message}</p>
         </div>
-        <p style={myvariable}>{validation.transactionType}</p>
         <div className="form-group mt-2">
           <label>From Account: </label>
-          <DropDown
-            data={[
-              "Personal Account",
-              "Real Living",
-              "My Dream Home",
-              "Full Circle",
-              "Core Realtors",
-              "Big Block",
-            ]}
-            name="fromAccount"
-            setFormData={setFormData}
-            value={formData.fromAccount}
-          />
+          <select className="form-control" {...register("fromAccount")}>
+            <option value="">Select Option</option>
+            {dataToAccount.map((data) => (
+              <option key={data} value={data}>
+                {data}
+              </option>
+            ))}
+          </select>
+          <p style={pTag}>{errors.fromAccount?.message}</p>
         </div>
-        <p style={myvariable}>{validation.fromAccount}</p>
+
         <div className="form-group mt-2">
           <label>To Account: </label>
-          <DropDown
-            data={[
-              "Personal Account",
-              "Real Living",
-              "My Dream Home",
-              "Full Circle",
-              "Core Realtors",
-              "Big Block",
-            ]}
-            name="toAccount"
-            setFormData={setFormData}
-            value={formData.toAccount}
-          />
+          <select className="form-control" {...register("toAccount")}>
+            <option value="">Select Option</option>
+            {dataFromAccount.map((data) => (
+              <option key={data} value={data}>
+                {data}
+              </option>
+            ))}
+          </select>
+          <p style={pTag}>{errors.toAccount?.message}</p>
         </div>
-        <p style={myvariable}>{validation.toAccount}</p>
+
         <div className="form-group mt-2">
           <label>Amount: </label>
           <input
             type="number"
             className="form-control"
-            onChange={handleValue}
-            name="amount"
-            value={formData.amount}
-          />
+            {...register("amount")}
+          ></input>
+          <p style={pTag}>{errors.amount?.message}</p>
         </div>
-        <p style={myvariable}>{validation.amount}</p>
+
         <div className="form-group mt-2">
           <label>Receipt: </label>
           <div className="col-sm-18">
-            <img
+            {/* <img
               // type="file"
               // className="form-control-file"
               ref={imageRef}
-              onChange={handleValue}
-              name="receipt"
+              // onChange={handleValue}
+              // name="receipt"
               src={formData.receipt}
-            />
+            /> */}
             <input
               type="file"
               className="form-control-file"
-              onChange={handleValue}
-              name="receipt"
-              // value={formData.receipt}
-            />
+              {...register("receipt")}
+            ></input>
           </div>
+          <p style={pTag}>{errors.receipt?.message}</p>
         </div>
-        <p style={myvariable}>{validation.receipt}</p>
+        {/* <p>{validation.receipt}</p> */}
         <div className="form-group mt-2">
           <label>Notes: </label>
           <input
             type="textarea"
             className="form-control"
-            onChange={handleValue}
-            name="notes"
-            value={formData.notes}
+            
+            {...register("notes")}
           />
         </div>
-        <p style={myvariable}>{validation.notes}</p>
-
+        <p style={pTag}>{errors.notes?.message}</p>
         <div className="mt-2">
           <button type="submit" style={submitBtn} className="btn btn-primary">
             Submit

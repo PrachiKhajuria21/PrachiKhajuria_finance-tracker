@@ -24,7 +24,7 @@ export default function Registration()
     {
        emailArray.push(localData[i].email);
     }
-    console.log("emailArray:::::: ",emailArray)
+    // console.log("emailArray:::::: ",emailArray)
 
     let error = {};
     const navigate = useNavigate();
@@ -76,7 +76,7 @@ export default function Registration()
           navigate("/login")
       }
       else{
-        console.log("errorrrrrrr not occured");
+        // console.log("errorrrrrrr not occured");
       }
     }
 

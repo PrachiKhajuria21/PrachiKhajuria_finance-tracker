@@ -70,7 +70,7 @@ export default function Login() {
   // console.log("Token::::::::::",tokenGenerate)
 
   const handleSubmit = (e) => {
-    console.log("Insideeeeeeee");
+    // console.log("Insideeeeeeee");
     const errFunc = validate(loginData);
 
     setValidation(errFunc);
@@ -84,7 +84,7 @@ export default function Login() {
       navigate("/table");
     } else {
       e.preventDefault();
-      console.log("errFunc");
+      // console.log("errFunc");
     }
   };
 
@@ -131,7 +131,7 @@ export default function Login() {
           <label>Email: </label>
           <input type="text" name="email" onChange={handleValue} />
         </div>
-        {console.log("....", validation)}
+        {/* {console.log("....", validation)} */}
         <p style={myvariable}>{validation.email}</p>
         <div className="form-group mt-2">
           <label>Password: </label>
