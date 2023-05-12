@@ -1,12 +1,14 @@
 import PageMeta from "./TableComponent";
-import react, { useEffect, useState } from "react";
+import react, { useEffect, useState, useContext } from "react";
+import { userContext } from "../context/context";
 
-export default function TableData({ data }) {
-  const getDataFromLS = JSON.parse(localStorage.getItem("Data"));
+export default function TableData() {
+  // const getDataFromLS = JSON.parse(localStorage.getItem("Data"));
 
   const [order, setOrder] = useState("asc");
   const [search, setSearch] = useState("");
 
+  const { data, setData } = useContext(userContext);
   const [tableData, setTableData] = useState([]);
 
   useEffect(() => {
@@ -17,8 +19,10 @@ export default function TableData({ data }) {
 
   const records = 5;
   const totalRecords = data.length;
+  console.log("total recorsd", totalRecords);
 
   let pages = Math.ceil(totalRecords / records);
+  console.log(pages);
   let pageNumber = [...Array(pages + 1).keys()].slice(1);
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -152,7 +156,7 @@ export default function TableData({ data }) {
       <table style={mystyle}>
         <tbody>
           <tr>
-            <th>ID</th>
+            {/* <th>ID</th> */}
             {/* <th onClick={() => HandleSort("date")}>Transaction Date</th> */}
             <th onClick={() => handleTableData({ sort: "date" })}>
               Transaction Date

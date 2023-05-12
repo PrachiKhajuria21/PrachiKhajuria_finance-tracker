@@ -1,4 +1,4 @@
-import react, { useEffect, useRef, useState } from "react";
+import react, { useEffect, useRef, useState, useContext } from "react";
 import DropDown from "./DropDown";
 import {
   BrowserRouter as Router,
@@ -8,11 +8,22 @@ import {
   useLocation,
   Navigate,
 } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { userContext } from "../context/context";
 
-export default function FormData({ state }) {
+export default function FormData() {
+  const { data, setData } = useContext(userContext);
+
+  const location = useLocation();
+  const userId = location.state;
+  const userData = data.find(({ id }) => id === userId);
+  console.log("userData",userData)
+  
+
+  const [receiptData, setReceiptData] = useState({ receipt: ""});
+
 
   const dataMonth = [
     "january",
@@ -50,8 +61,7 @@ export default function FormData({ state }) {
     "Big Block",
   ];
 
- const fileTypee = ['png','jpeg','jpg'];
-
+  const fileTypee = ["png", "jpeg", "jpg"];
 
   const schema = yup.object().shape({
     date: yup.string().required("date is required"),
@@ -74,38 +84,31 @@ export default function FormData({ state }) {
       .required("Notes is required")
       .max(250, "notes length should be less than 250"),
 
-    receipt: yup.mixed().test("fileRequired", "This is required", (value) => {
-      if (value.length === 0) {
-        return false;
-      } else {
-        return true;
-      }
-    })
-    .test("fileSize","Size should not be greater than 1mb",(value) => {
-    //  console.log("size",value[0].size);
-     if(value[0]?.size > 1024 * 1024)
-     {
-        return false;
-     }
-     else
-     {
-        return true;
-     }
-    })
-    .test("fileType","Image type should be jpeg,png or jpg",(value) => 
-    {
-        if(fileTypee.includes(value[0]?.type.slice(6)))
-        {
-           return true;
+    receipt: yup
+      .mixed()
+      .test("fileRequired", "This is required", (value) => {
+        if (value.length === 0) {
+          return false;
+        } else {
+          return true;
         }
-        else
-        {
+      })
+      .test("fileSize", "Size should not be greater than 1mb", (value) => {
+        //  console.log("size",value[0].size);
+        if (value[0]?.size > 1024 * 1024) {
+          return false;
+        } else {
+          return true;
+        }
+      })
+      .test("fileType", "Image type should be jpeg,png or jpg", (value) => {
+        if (fileTypee.includes(value[0]?.type.slice(6))) {
+          return true;
+        } else {
           return false;
         }
-    })
-    ,
+      }),
   });
-
 
   const imageRef = useRef(null);
 
@@ -129,12 +132,38 @@ export default function FormData({ state }) {
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) });
 
-  // let errorData = {};
-  
+  const handleReceipt = (e) => {
+    // console.log("eeeeee", e.target.value);
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setReceiptData((prev) => ({
+        ...prev,
+        receipt: reader.result.toString(),
+      }));
+    };
+    reader.readAsDataURL(file);
+  };
+  // console.log("receipt path::::", Object.values(receiptData).toString());
 
-  const onSubmit = (data) => console.log("new Form Data:::::::::::::", data);
-  console.log("eroor::::", errors);
 
+  const onSubmit = (data1) => {
+    
+  // console.log("data1",data1);
+
+
+  const data2 = {...data1,id:Date.now(),receipt:Object.values(receiptData).toString()}
+  // console.log("spread",data2)
+    setData((prev)=>([...prev,data2]))
+
+    // setDataNew(data1);
+    
+    // console.log("dat:::::::", data.length);
+
+  };
+
+
+  // console.log("dataNEw",data)
   return (
     <div className="container">
       <Link to="/table">
@@ -147,7 +176,7 @@ export default function FormData({ state }) {
           <input
             type="date"
             className="form-control"
-            {...register("date")}
+            {...register("date")} value
           ></input>
           <p style={pTag}>{errors.date?.message}</p>
         </div>
@@ -209,6 +238,7 @@ export default function FormData({ state }) {
           <input
             type="number"
             className="form-control"
+            defaultValue={0}
             {...register("amount")}
           ></input>
           <p style={pTag}>{errors.amount?.message}</p>
@@ -229,6 +259,7 @@ export default function FormData({ state }) {
               type="file"
               className="form-control-file"
               {...register("receipt")}
+              onChange={handleReceipt}
             ></input>
           </div>
           <p style={pTag}>{errors.receipt?.message}</p>
@@ -239,7 +270,6 @@ export default function FormData({ state }) {
           <input
             type="textarea"
             className="form-control"
-            
             {...register("notes")}
           />
         </div>

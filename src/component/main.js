@@ -1,18 +1,21 @@
 import react from "react";
-import { useState } from "react";
+import { useState,useContext } from "react";
 import TableData from "./TableData";
 import { useNavigate } from "react-router-dom";
+import { userContext } from "../context/context";
 
 export default function TableMerge() {
-  const getDataFromLS = JSON.parse(localStorage.getItem("Data"));
-  // console.log("formData", getDataFromLS);
+  // const getDataFromLS = JSON.parse(localStorage.getItem("Data"));
+ 
+  const context = useContext(userContext);
 
-  // const [allData, setAllData] = useState(getDataFromLS);
+  const getDataFromLS = context;
+  console.log("::::::::",getDataFromLS)
+
   const [groupBy, setGroupBy] = useState({});
   const navigate = useNavigate();
 
   const handleGroup = (e) => {
-    // console.log(e.target.value);
 
     const get = getDataFromLS.reduce(function (a, b) {
       let key = b[e.target.value];
@@ -23,6 +26,7 @@ export default function TableMerge() {
       return a;
     }, {});
     setGroupBy(get);
+
     // console.log("get", get);
     // setAllData([]);
   };
@@ -43,8 +47,6 @@ export default function TableMerge() {
     backgroundColor: "red",
     border: "1px solid red",
     fontWeight: "bold",
-    // marginTop:"20px",
-    // border:"1px solid green"
   };
 
   const label = {

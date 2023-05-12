@@ -8,7 +8,7 @@ export default function PageMeta({ datar }) {
   const navigate = useNavigate();
 
   const handleEdit = (index) => {
-    // console.log("index::::::",index)
+    console.log("edit::::::",index)
     navigate("/form",{state:index})
   };
 
@@ -25,7 +25,7 @@ export default function PageMeta({ datar }) {
         datar.length > 0 &&
         datar.map((datar, index) => (
           <tr key={index}>
-            <td>{datar.id}</td>
+            {/* <td>{datar.id}</td> */}
             <td>{datar.date}</td>
             <td>{datar.month}</td>
             <td>{datar.transactionType}</td>
