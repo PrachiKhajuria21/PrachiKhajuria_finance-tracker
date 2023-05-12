@@ -2,13 +2,12 @@ import PageMeta from "./TableComponent";
 import react, { useEffect, useState, useContext } from "react";
 import { userContext } from "../context/context";
 
-export default function TableData() {
+export default function TableData({ data }) {
   // const getDataFromLS = JSON.parse(localStorage.getItem("Data"));
 
   const [order, setOrder] = useState("asc");
   const [search, setSearch] = useState("");
 
-  const { data, setData } = useContext(userContext);
   const [tableData, setTableData] = useState([]);
 
   useEffect(() => {
@@ -54,25 +53,7 @@ export default function TableData() {
     }
   };
 
-  // useEffect(() => {
-  //  setTableData(data);
-  // }, []);
-
-  // const sortFunctionasc = (getname, param) => {
-  //   const sortedArr = param.sort((a, b) => (a[getname] < b[getname] ? -1 : 1));
-  //   // setData(sortedArr);
-  //   setSearch(sortedArr);
-  //   setOrder("desc");
-
-  //   return;
-  // };
-
-  // const sortFunctiondesc = (getname, param) => {
-  //   const sortedArr = param.sort((a, b) => (a[getname] > b[getname] ? -1 : 1));
-  //   // setData(sortedArr);
-
-  //   setOrder(" ");
-  // };
+ 
 
   const handlePagination = (number) => {
     setCurrentPage(number);

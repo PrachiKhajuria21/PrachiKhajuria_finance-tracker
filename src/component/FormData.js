@@ -15,15 +15,36 @@ import { userContext } from "../context/context";
 
 export default function FormData() {
   const { data, setData } = useContext(userContext);
+  console.log("data", data);
 
+  const [editData, setEditData] = useState({});
   const location = useLocation();
+  const INITIAL_STATE = {
+    date: "",
+    month: "",
+    transactionType: "",
+    fromAccount: "",
+    toAccount: "",
+    amount: 0,
+    receipt: "",
+    id: Date.now(),
+    notes: "",
+  };
+  const [formState, setFormState] = useState(INITIAL_STATE);
+  const values = formState;
   const userId = location.state;
-  const userData = data.find(({ id }) => id === userId);
-  console.log("userData",userData)
-  
 
-  const [receiptData, setReceiptData] = useState({ receipt: ""});
+  useEffect(() => {
+    const userData = data.find(({ id }) => id === userId);
+    if (userData !== undefined) {
+      // setEditData(userData);
+      setFormState(userData);
+    }
+  }, []);
 
+  const userDataIndex = data.findIndex(({ id }) => id === userId);
+
+  const [receiptData, setReceiptData] = useState({ receipt: "" });
 
   const dataMonth = [
     "january",
@@ -100,14 +121,14 @@ export default function FormData() {
         } else {
           return true;
         }
-      })
-      .test("fileType", "Image type should be jpeg,png or jpg", (value) => {
-        if (fileTypee.includes(value[0]?.type.slice(6))) {
-          return true;
-        } else {
-          return false;
-        }
       }),
+      // .test("fileType", "Image type should be jpeg,png or jpg", (value) => {
+      //   if (fileTypee.includes(value[0]?.type.slice(6))) {
+      //     return true;
+      //   } else {
+      //     return false;
+      //   }
+      // }),
   });
 
   const imageRef = useRef(null);
@@ -130,10 +151,9 @@ export default function FormData() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({ resolver: yupResolver(schema) });
+  } = useForm({ values, resolver: yupResolver(schema) });
 
   const handleReceipt = (e) => {
-    // console.log("eeeeee", e.target.value);
     const file = e.target.files[0];
     const reader = new FileReader();
     reader.onloadend = () => {
@@ -144,26 +164,29 @@ export default function FormData() {
     };
     reader.readAsDataURL(file);
   };
-  // console.log("receipt path::::", Object.values(receiptData).toString());
-
 
   const onSubmit = (data1) => {
+    // console.log("editedData",data1)
+
+    if (!userId) {
+      const data2 = {
+        ...data1,
+        id: Date.now(),
+        receipt: Object.values(receiptData).toString(),
+      };
+      setData((prev) => [...prev, data2]);
+      console.log("array", data[6]);
+    } else {
     
-  // console.log("data1",data1);
+      console.log("data1",data1)
 
-
-  const data2 = {...data1,id:Date.now(),receipt:Object.values(receiptData).toString()}
-  // console.log("spread",data2)
-    setData((prev)=>([...prev,data2]))
-
-    // setDataNew(data1);
+      data[userDataIndex] = data1;
+      console.log("updated darta", data);
+      setData(data);
     
-    // console.log("dat:::::::", data.length);
-
+    }
   };
 
-
-  // console.log("dataNEw",data)
   return (
     <div className="container">
       <Link to="/table">
@@ -176,7 +199,7 @@ export default function FormData() {
           <input
             type="date"
             className="form-control"
-            {...register("date")} value
+            {...register("date")}
           ></input>
           <p style={pTag}>{errors.date?.message}</p>
         </div>
@@ -209,7 +232,11 @@ export default function FormData() {
         </div>
         <div className="form-group mt-2">
           <label>From Account: </label>
-          <select className="form-control" {...register("fromAccount")}>
+          <select
+            className="form-control"
+            {...register("fromAccount")}
+           
+          >
             <option value="">Select Option</option>
             {dataToAccount.map((data) => (
               <option key={data} value={data}>
@@ -222,7 +249,11 @@ export default function FormData() {
 
         <div className="form-group mt-2">
           <label>To Account: </label>
-          <select className="form-control" {...register("toAccount")}>
+          <select
+            className="form-control"
+            {...register("toAccount")}
+       
+          >
             <option value="">Select Option</option>
             {dataFromAccount.map((data) => (
               <option key={data} value={data}>
@@ -240,6 +271,7 @@ export default function FormData() {
             className="form-control"
             defaultValue={0}
             {...register("amount")}
+          
           ></input>
           <p style={pTag}>{errors.amount?.message}</p>
         </div>
@@ -247,14 +279,7 @@ export default function FormData() {
         <div className="form-group mt-2">
           <label>Receipt: </label>
           <div className="col-sm-18">
-            {/* <img
-              // type="file"
-              // className="form-control-file"
-              ref={imageRef}
-              // onChange={handleValue}
-              // name="receipt"
-              src={formData.receipt}
-            /> */}
+            {/* <img ref={imageRef} src={} /> */}
             <input
               type="file"
               className="form-control-file"
@@ -271,6 +296,7 @@ export default function FormData() {
             type="textarea"
             className="form-control"
             {...register("notes")}
+          
           />
         </div>
         <p style={pTag}>{errors.notes?.message}</p>

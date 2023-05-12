@@ -1,22 +1,21 @@
 import react from "react";
-import { useState,useContext } from "react";
+import { useState, useContext } from "react";
 import TableData from "./TableData";
 import { useNavigate } from "react-router-dom";
 import { userContext } from "../context/context";
 
 export default function TableMerge() {
   // const getDataFromLS = JSON.parse(localStorage.getItem("Data"));
- 
+
   const context = useContext(userContext);
 
-  const getDataFromLS = context;
-  console.log("::::::::",getDataFromLS)
+  const getDataFromLS = context.data;
+  console.log("::::::::", getDataFromLS);
 
   const [groupBy, setGroupBy] = useState({});
   const navigate = useNavigate();
 
   const handleGroup = (e) => {
-
     const get = getDataFromLS.reduce(function (a, b) {
       let key = b[e.target.value];
       if (!a[key]) {
@@ -26,9 +25,6 @@ export default function TableMerge() {
       return a;
     }, {});
     setGroupBy(get);
-
-    // console.log("get", get);
-    // setAllData([]);
   };
 
   const handleRemove = () => {
@@ -93,7 +89,7 @@ export default function TableMerge() {
         Object.keys(groupBy).map((data, index) => (
           <>
             {/* /<TableData key={index} data={groupBy[data]} setData={setAllData} /> */}
-
+        
             <TableData key={index} data={groupBy[data]} />
           </>
         ))
