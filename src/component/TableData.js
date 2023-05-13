@@ -53,7 +53,25 @@ export default function TableData({ data }) {
     }
   };
 
- 
+  // useEffect(() => {
+  //  setTableData(data);
+  // }, []);
+
+  // const sortFunctionasc = (getname, param) => {
+  //   const sortedArr = param.sort((a, b) => (a[getname] < b[getname] ? -1 : 1));
+  //   // setData(sortedArr);
+  //   setSearch(sortedArr);
+  //   setOrder("desc");
+
+  //   return;
+  // };
+
+  // const sortFunctiondesc = (getname, param) => {
+  //   const sortedArr = param.sort((a, b) => (a[getname] > b[getname] ? -1 : 1));
+  //   // setData(sortedArr);
+
+  //   setOrder(" ");
+  // };
 
   const handlePagination = (number) => {
     setCurrentPage(number);
@@ -158,6 +176,7 @@ export default function TableData({ data }) {
             <th>Receipt</th>
             <th onClick={() => handleTableData({ sort: "notes" })}>Notes</th>
             <th>Action</th>
+            <th>View</th>
           </tr>
           {/* {data.length > 0 && search.length === 0 && ( */}
 

@@ -43,6 +43,7 @@ export default function FormData() {
   }, []);
 
   const userDataIndex = data.findIndex(({ id }) => id === userId);
+  console.log("userDataIndex",data[userDataIndex])
 
   const [receiptData, setReceiptData] = useState({ receipt: "" });
 
@@ -82,7 +83,7 @@ export default function FormData() {
     "Big Block",
   ];
 
-  const fileTypee = ["png", "jpeg", "jpg"];
+  const fileTypee = ["image/png", "image/jpeg", "image/jpg"];
 
   const schema = yup.object().shape({
     date: yup.string().required("date is required"),
@@ -121,14 +122,14 @@ export default function FormData() {
         } else {
           return true;
         }
+      })
+      .test("fileType", "Image type should be jpeg,png or jpg", (value) => {
+        if (fileTypee.includes(value[0]?.type)) {
+          return true;
+        } else {
+          return false;
+        }
       }),
-      // .test("fileType", "Image type should be jpeg,png or jpg", (value) => {
-      //   if (fileTypee.includes(value[0]?.type.slice(6))) {
-      //     return true;
-      //   } else {
-      //     return false;
-      //   }
-      // }),
   });
 
   const imageRef = useRef(null);
@@ -165,8 +166,10 @@ export default function FormData() {
     reader.readAsDataURL(file);
   };
 
+  console.log("receipt::::",receiptData)
+
   const onSubmit = (data1) => {
-    // console.log("editedData",data1)
+    console.log("editedData",data1)
 
     if (!userId) {
       const data2 = {
@@ -186,6 +189,8 @@ export default function FormData() {
     
     }
   };
+
+ console.log("final data",data)
 
   return (
     <div className="container">
@@ -279,7 +284,9 @@ export default function FormData() {
         <div className="form-group mt-2">
           <label>Receipt: </label>
           <div className="col-sm-18">
-            {/* <img ref={imageRef} src={} /> */}
+            
+            {/* <img ref={imageRef} src={formState.receipt} /> */}
+
             <input
               type="file"
               className="form-control-file"

@@ -1,9 +1,11 @@
-import react,{ useState} from "react";
+import react,{ useState,useContext} from "react";
 import TableData from "./TableData";
 import { useNavigate } from "react-router-dom";
+import { userContext } from "../context/context";
 
 export default function PageMeta({ datar }) {
 
+  const { data, setData } = useContext(userContext);
 
   const navigate = useNavigate();
 
@@ -11,6 +13,15 @@ export default function PageMeta({ datar }) {
     console.log("edit::::::",index)
     navigate("/form",{state:index})
   };
+
+  const handleRemove = (index) =>
+  {
+     console.log("index",index)
+     console.log("data",data)
+     const newArray = data.filter(({id}) => id !== index)
+     console.log("array",newArray)
+     setData(newArray)
+  }
 
   const edit = {
     backgroundColor: "green",
@@ -38,6 +49,9 @@ export default function PageMeta({ datar }) {
             <td>{datar.notes}</td>
             <td>
               <button style={edit} onClick={() => handleEdit(datar.id)}>Edit</button>
+            </td>
+            <td>
+              <button style={edit} onClick={() => handleRemove(datar.id)}>Remove</button>
             </td>
           </tr>
         ))}
