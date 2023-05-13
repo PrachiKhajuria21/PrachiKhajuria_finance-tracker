@@ -4,24 +4,23 @@ import { useNavigate } from "react-router-dom";
 import { userContext } from "../context/context";
 
 export default function PageMeta({ datar }) {
+  console.log("datarrr",datar)
 
-  const { data, setData } = useContext(userContext);
+  const { data,setData } = useContext(userContext);
 
   const navigate = useNavigate();
 
-  const handleEdit = (index) => {
-    console.log("edit::::::",index)
+  const handleEdit = (index) => { 
     navigate("/form",{state:index})
   };
 
   const handleRemove = (index) =>
   {
-     console.log("index",index)
-     console.log("data",data)
      const newArray = data.filter(({id}) => id !== index)
-     console.log("array",newArray)
+     console.log("newArray",newArray)
      setData(newArray)
   }
+  console.log()
 
   const edit = {
     backgroundColor: "green",

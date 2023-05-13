@@ -18,60 +18,16 @@ export default function TableData({ data }) {
 
   const records = 5;
   const totalRecords = data.length;
-  console.log("total recorsd", totalRecords);
+  // console.log("total recorsd", totalRecords);
 
   let pages = Math.ceil(totalRecords / records);
-  console.log(pages);
+  // console.log(pages);
   let pageNumber = [...Array(pages + 1).keys()].slice(1);
 
   const [currentPage, setCurrentPage] = useState(1);
 
   const indexOfLast = records * currentPage;
   const indexOfFirst = indexOfLast - records;
-
-  const HandleSort = (getname) => {
-    if (order === "asc") {
-      // if (search.length !== 0) {
-      // sortFunctionasc(getname, data);
-
-      return;
-      // }
-      // sortFunctionasc(getname, data);
-    } else if (order === "desc") {
-      // if (search.length !== 0) {
-      // sortFunctiondesc(getname, data);
-      return;
-      // }
-      // sortFunctiondesc(getname, data);
-    } else {
-      // if (search.length !== 0) {
-      // setData(search);
-      // setOrder("desc");
-      // }
-      // setData(data);
-      // setOrder("asc");
-    }
-  };
-
-  // useEffect(() => {
-  //  setTableData(data);
-  // }, []);
-
-  // const sortFunctionasc = (getname, param) => {
-  //   const sortedArr = param.sort((a, b) => (a[getname] < b[getname] ? -1 : 1));
-  //   // setData(sortedArr);
-  //   setSearch(sortedArr);
-  //   setOrder("desc");
-
-  //   return;
-  // };
-
-  // const sortFunctiondesc = (getname, param) => {
-  //   const sortedArr = param.sort((a, b) => (a[getname] > b[getname] ? -1 : 1));
-  //   // setData(sortedArr);
-
-  //   setOrder(" ");
-  // };
 
   const handlePagination = (number) => {
     setCurrentPage(number);
@@ -155,8 +111,7 @@ export default function TableData({ data }) {
       <table style={mystyle}>
         <tbody>
           <tr>
-            {/* <th>ID</th> */}
-            {/* <th onClick={() => HandleSort("date")}>Transaction Date</th> */}
+            
             <th onClick={() => handleTableData({ sort: "date" })}>
               Transaction Date
             </th>
@@ -178,11 +133,9 @@ export default function TableData({ data }) {
             <th>Action</th>
             <th>View</th>
           </tr>
-          {/* {data.length > 0 && search.length === 0 && ( */}
-
+  
           <PageMeta datar={tableData.slice(indexOfFirst, indexOfLast)} />
-          {/* )} */}
-          {/* {search.length > 0 && <PageMeta data={search} />} */}
+         
         </tbody>
       </table>
       <div>

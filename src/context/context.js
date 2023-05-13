@@ -52,6 +52,7 @@ export const userContext = react.createContext(records);
 
 export default function ProviderComponent({ children }) {
   const [data, setData] = useState(records);
+  const [globalGroupBy,setGlobalGroupBy] = useState("")
   return (
     <userContext.Provider value={{ data, setData }}>
       {children}
