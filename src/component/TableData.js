@@ -62,7 +62,6 @@ export default function TableData({ data }) {
         curData.transactionType.includes(searchValue) ||
         curData.fromAccount.includes(searchValue) ||
         curData.toAccount.includes(searchValue) ||
-        curData.amount.includes(searchValue) ||
         curData.notes.includes(searchValue)
       ) {
         return curData;
