@@ -1,4 +1,4 @@
-import react, { useEffect, useRef, useState, useContext } from "react";
+import react, { useEffect, useRef, useState } from "react";
 import DropDown from "./DropDown";
 import {
   BrowserRouter as Router,
@@ -8,15 +8,20 @@ import {
   useLocation,
   Navigate,
 } from "react-router-dom";
+import { addTransaction, editTransaction } from "../redux/transaction";
 import { set, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { userContext } from "../context/context";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function FormData() {
-  const { data, setData } = useContext(userContext);
+ 
+  const data = useSelector((state) => state.transaction.value);
 
+  const dispatch = useDispatch();
 
+  // const [editData, setEditData] = useState({});
 
   const INITIAL_STATE = {
     date: "",
@@ -40,13 +45,13 @@ export default function FormData() {
     const userData = data.find(({ id }) => id === userId);
     if (userData !== undefined) {
       // setEditData(userData);
-      console.log("editted data new :::: ", userData);
+      // console.log("editted data new :::: ", userData);
       setFormState(userData);
     }
   }, []);
 
-  const userDataIndex = data.findIndex(({ id }) => id === userId);
-  // console.log("userDataIndex",data[userDataIndex])
+  // const userDataIndex = data.findIndex(({ id }) => id === userId);
+  // // console.log("userDataIndex",data[userDataIndex])
 
   const [receiptData, setReceiptData] = useState({ receipt: "" });
 
@@ -86,7 +91,7 @@ export default function FormData() {
     "Big Block",
   ];
 
-  const fileTypee = ["image/png", "image/jpeg", "image/jpg+"];
+  const fileTypee = ["image/png", "image/jpeg", "image/jpg"];
 
   const schema = yup.object().shape({
     date: yup.string().required("date is required"),
@@ -125,19 +130,20 @@ export default function FormData() {
         } else {
           return true;
         }
-      })
-      .test("fileType", "Image type should be jpeg,png or jpg", (value) => {
-        console.log("image type", value[0].type);
-        if (value[0].type !== undefined) {
-          if (fileTypee.includes(value[0]?.type)) {
-            return true;
-          } else {
-            return false;
-          }
-        } else {
-          return true;
-        }
       }),
+    // .test("fileType", "Image type should be jpeg,png or jpg", (value) => {
+    //   console.log("image type", value[0].type);
+    //   if (value[0].type !== undefined) {
+    //     if (fileTypee.includes(value[0]?.type)) {
+    //       return true;
+    //     } else {
+    //       return false;
+    //     }
+    //   }else{
+    //     return true;
+    //   }
+
+    // })
   });
 
   const imageRef = useRef(null);
@@ -164,7 +170,7 @@ export default function FormData() {
 
   const handleReceipt = (e) => {
     const file = e.target.files[0];
-    console.log("image type", file);
+    // console.log("image type", file);
     const reader = new FileReader();
     reader.onloadend = () => {
       setReceiptData((prev) => ({
@@ -186,18 +192,18 @@ export default function FormData() {
         id: Date.now(),
         receipt: Object.values(receiptData).toString(),
       };
-      setData((prev) => [...prev, data2]);
-      console.log("array", data[6]);
+      dispatch(addTransaction(data2));
+      // console.log("array", data[6]);
     } else {
-      console.log("data1", data1);
-
-      data[userDataIndex] = data1;
-      console.log("updated darta", data);
-      setData(data);
+      // console.log("data1", data1);
+      dispatch(editTransaction({ userId, data1 }));
+      // data[userDataIndex] = data1;
+      // console.log("updated darta", data);
+      // setData(data);
     }
   };
 
-  console.log("final data", data);
+
 
   return (
     <div className="container">
@@ -283,15 +289,15 @@ export default function FormData() {
           <label>Receipt: </label>
           <div className="col-sm-18">
             <img ref={imageRef} src={formState.receipt} />
-            {console.log(formState.receipt)}
-            {formState.receipt === "" && (
-              <input
-                type="file"
-                className="form-control-file"
-                {...register("receipt")}
-                onChange={handleReceipt}
-              ></input>
-            )}
+            {/* {console.log(formState.receipt)} */}
+
+            <input
+              type="file"
+              className="form-control-file"
+              {...register("receipt")}
+              onChange={handleReceipt}
+            ></input>
+
             <p style={pTag}>{errors.receipt?.message}</p>
           </div>
         </div>

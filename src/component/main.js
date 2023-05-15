@@ -1,11 +1,14 @@
 import react, { useEffect } from "react";
-import { useState, useContext } from "react";
+import { useState} from "react";
 import TableData from "./TableData";
 import { useNavigate } from "react-router-dom";
 import { userContext } from "../context/context";
+import { useSelector } from "react-redux";
 
 export default function TableMerge() {
-  const {data , setGlobalGroupBy} = useContext(userContext);
+
+  const data = useSelector((state) => state.transaction.value)
+  
 
   const getDataFromLS = data;
 
@@ -16,11 +19,11 @@ export default function TableMerge() {
 
   const handleGroup = (e) => {
     const selctKey = e.target.value;
-    console.log("e.tagr",e.target.value)
+    // console.log("e.tagr",e.target.value)
     setGlobalKey(selctKey);
     const get = getDataFromLS.reduce(function (a, b) {
       let key = b[e.target.value];
-      console.log("keys",key)
+      // console.log("keys",key)
       if (!a[key]) {
         a[key] = [];
       }
@@ -37,22 +40,22 @@ export default function TableMerge() {
   useEffect(()=>{
     const get = getDataFromLS.reduce(function (a, b) {
       let key =b[globalKey];
-      console.log("keyyyyyyy",globalKey)
-      console.log("keys",key)
+      // console.log("keyyyyyyy",globalKey)
+      // console.log("keys",key)
       if (!a[key]) {
         a[key] = [];
       }
       a[key].push(b);
       return a;
     }, {});
-  console.log("getttttt0",get)
+  // console.log("getttttt0",get)
     setGroupBy(get);
   },[getDataFromLS])
 
 
 
-  console.log("gte::::",groupBy)
-  console.log("keys::: ",Object.keys(groupBy))
+  // console.log("gte::::",groupBy)
+  // console.log("keys::: ",Object.keys(groupBy))
   const handleRemove = () => {
     localStorage.removeItem("Token");
     navigate("/");

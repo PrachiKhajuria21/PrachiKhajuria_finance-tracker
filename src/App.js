@@ -1,5 +1,5 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState  } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -15,7 +15,7 @@ import TableMerge from "./component/main";
 import Login from "./component/login";
 import "./index.css";
 import Registration from "./component/registration";
-import ProviderComponent from "./context/context";
+
 
 export default function App() {
   const tokenDemo = localStorage.getItem("Token");
@@ -31,7 +31,7 @@ export default function App() {
   return (
     <div>
       <h1 style={finance}>Finance tracker</h1>
-      <ProviderComponent>
+    
         <Router>
           <Routes>
             {/* <Route exact path="/form" index element={<FormData />}></Route> */}
@@ -59,7 +59,7 @@ export default function App() {
             <Route path="/reg" element={<Registration />}></Route>
           </Routes>
         </Router>
-      </ProviderComponent>
+   
     </div>
   );
 }

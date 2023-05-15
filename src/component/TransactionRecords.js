@@ -1,7 +1,4 @@
-import react, { useState } from "react";
-
-// const records = JSON.parse(localStorage.getItem("Data"));
-const records = [
+export const records = [
   {
     date: "2023-02-01",
     month: "april",
@@ -10,7 +7,7 @@ const records = [
     toAccount: "My Dream Home",
     amount: 10,
     receipt: "",
-    id: Date.now(),
+    id: 1,
     notes: "hello",
   },
   {
@@ -21,7 +18,7 @@ const records = [
     toAccount: "Real Living",
     amount: 100,
     receipt: "",
-    id: Date.now(),
+    id: 2,
     notes: "helloMY",
   },
   {
@@ -32,8 +29,8 @@ const records = [
     toAccount: "Core Realtors",
     amount: 1000,
     receipt: "",
-    id: Date.now(),
-    notes: "hellojhdsfgj",
+    id: 3,
+    notes: "hello all",
   },
   {
     date: "2023-07-10",
@@ -43,23 +40,7 @@ const records = [
     toAccount: "Full Circle",
     amount: 560,
     receipt: "",
-    id: Date.now(),
+    id: 4,
     notes: "prachi here",
   },
 ];
-
-export const userContext = react.createContext(records);
-
-export default function ProviderComponent({ children }) {
-  const [data, setData] = useState(records);
-  const [globalGroupBy,setGlobalGroupBy] = useState("")
-  return (
-    <userContext.Provider value={{ data, setData }}>
-      {children}
-    </userContext.Provider>
-  );
-}
-
-
-
-
