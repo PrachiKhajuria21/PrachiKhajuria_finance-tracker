@@ -1,15 +1,12 @@
 import react, { useEffect, useRef, useState } from "react";
-import DropDown from "./DropDown";
+
 import {
   BrowserRouter as Router,
-  Routes,
-  Route,
   Link,
   useLocation,
-  Navigate,
 } from "react-router-dom";
 import { addTransaction, editTransaction } from "../redux/transaction";
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigate } from "react-router-dom";
@@ -116,26 +113,25 @@ export default function FormData() {
         }
       })
       .test("fileSize", "Size should not be greater than 1mb", (value) => {
-        //  console.log("size",value[0].size);
         if (value[0]?.size > 1024 * 1024) {
           return false;
         } else {
           return true;
         }
-      }),
-    // .test("fileType", "Image type should be jpeg,png or jpg", (value) => {
-    //   console.log("image type", value[0].type);
-    //   if (value[0].type !== undefined) {
-    //     if (fileTypee.includes(value[0]?.type)) {
-    //       return true;
-    //     } else {
-    //       return false;
-    //     }
-    //   }else{
-    //     return true;
-    //   }
+      })
+    .test("fileType", "Image type should be jpeg,png or jpg", (value) => {
+      console.log("image type", value[0].type);
+      if (value[0].type !== undefined) {
+        if (fileTypee.includes(value[0]?.type)) {
+          return true;
+        } else {
+          return false;
+        }
+      }else{
+        return true;
+      }
 
-    // })
+    })
   });
 
   const imageRef = useRef(null);
@@ -163,19 +159,29 @@ export default function FormData() {
  const [flag,setFlag] = useState(0)
  console.log("flag",flag)
 
+ const [filed, setFiled] = useState();
+
   const handleReceipt = (e) => {
     const file = e.target.files[0];
     console.log("receipt", file);
     const reader = new FileReader();
     reader.onloadend = () => {
-      alert(reader.result);
       setReceiptData(reader.result);
+      
     };
     reader.readAsDataURL(file);
      setFlag(1)
+     setFiled(URL.createObjectURL(e.target.files[0]));
+
+
+ 
   };
 
   console.log("receipt", receiptData);
+  // console.log("formState.receipt", formState.receipt);
+
+ 
+
 
   const onSubmit = (data1) => {
     if (!userId) {
@@ -292,7 +298,9 @@ export default function FormData() {
         <div className="form-group mt-2">
           <label>Receipt: </label>
           <div className="col-sm-18">
-            <img ref={imageRef} src={formState.receipt} />
+            {flag === 0 && <img ref={imageRef} src={formState.receipt} />}
+            <img src={filed} />
+            
             {/* {console.log(formState.receipt)} */}
 
             <input

@@ -8,7 +8,6 @@ export const userSlice = createSlice({
         addUser(state,action){
             console.log("action",action.payload.action)
             state.value.push(action.payload)
-            
         }
     }
 })

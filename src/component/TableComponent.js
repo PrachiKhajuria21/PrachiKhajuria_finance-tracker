@@ -26,7 +26,14 @@ export default function PageMeta({ datar }) {
     border: "1px solid green",
     fontWeight: "bold",
     color: "white",
+    marginLeft :"20px"
   };
+  const tableHeader = {
+    paddingLeft:"30px"
+   }
+   const tableHeaderTrans = {
+    paddingLeft :"20px"
+   }
 
   return (
     <>
@@ -34,16 +41,16 @@ export default function PageMeta({ datar }) {
         datar.map((datar, index) => (
           <tr key={index}>
             {/* <td>{datar.id}</td> */}
-            <td>{datar.date}</td>
-            <td>{datar.month}</td>
-            <td>{datar.transactionType}</td>
-            <td>{datar.fromAccount}</td>
-            <td>{datar.toAccount}</td>
-            <td>{datar.amount}</td>
-            <td>
+            <td  style={tableHeader}>{datar.date}</td>
+            <td  style={tableHeader}>{datar.month}</td>
+            <td  style={tableHeaderTrans}>{datar.transactionType}</td>
+            <td style={tableHeaderTrans}>{datar.fromAccount}</td>
+            <td style={tableHeaderTrans}>{datar.toAccount}</td>
+            <td style={tableHeaderTrans}>{datar.amount}</td>
+            <td style={tableHeaderTrans}>
               <img src={datar.receipt} alt="test" />
             </td>
-            <td>{datar.notes}</td>
+            <td style={tableHeaderTrans}>{datar.notes}</td>
             <td>
               <button style={edit} onClick={() => handleEdit(datar.id)}>
                 Edit
