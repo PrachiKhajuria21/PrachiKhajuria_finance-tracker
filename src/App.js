@@ -1,15 +1,10 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import React, { useEffect, useState  } from "react";
 import {
   BrowserRouter as Router,
   Routes,
-  Route,
-  Link,
-  Navigate,
+  Route
 } from "react-router-dom";
-// import FormData from "./FormData";
-// import TableData from "./TableData"
-import TableData from "./component/TableData";
+
 import FormData from "./component/FormData";
 import TableMerge from "./component/main";
 import Login from "./component/login";
@@ -19,9 +14,6 @@ import Registration from "./component/registration";
 
 export default function App() {
   const tokenDemo = localStorage.getItem("Token");
-
-  console.log("tokenDemo::::::::::::", tokenDemo);
-
   const finance = {
     marginLeft: "35%",
     marginTop: "2%",
@@ -41,13 +33,13 @@ export default function App() {
               index
               element={tokenDemo === null ? <Login /> : <FormData />}
             ></Route>
-            <Route
+            {/* <Route
               exact
               path="/tabledata"
               element={
                 tokenDemo === null ? <Login /> : <Navigate replace to={"/"} />
               }
-            ></Route>
+            ></Route> */}
             {/* <Route exact path="/table" element={<TableMerge/>}></Route> */}
             <Route
               exact
@@ -55,10 +47,17 @@ export default function App() {
               element={tokenDemo === null ? <Login /> : <TableMerge />}
             ></Route>
 
-            <Route path="/" element={<Login />}></Route>
-            <Route path="/table" element={<TableMerge />}></Route>
+            <Route 
+            
+            path="/" element={<Login />}></Route>
+            {/* <Route path="/table" element={<TableMerge />}></Route> */}
 
-            <Route path="/reg" element={<Registration />}></Route>
+            <Route 
+            exact
+            path="/reg"
+            element={tokenDemo === null ? <Registration /> : <TableMerge />}
+            // path="/reg" element={<Registration />}
+            ></Route>
           </Routes>
         </Router>
    

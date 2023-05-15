@@ -2,15 +2,11 @@ import { ErrorResponse } from "@remix-run/router";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {  useSelector } from  "react-redux";
-// import { addUser } from "../redux/userLogin"
 
 export default function Login() {
   const navigate = useNavigate();
-  // const userLoginData = JSON.parse(localStorage.getItem("Login"));
-
   const userLoginData = useSelector((state) => state.userLoginInfo.value);
 
-  console.log("userLoginData",userLoginData)
 
   const INITIAL_STATE = {
     email: "",
@@ -19,23 +15,19 @@ export default function Login() {
 
   const [loginData, setLoginData] = useState(INITIAL_STATE);
 
-  // console.log("emailData::::",loginData)
   const emailArray = [];
   let i;
   for (i = 0; i < userLoginData.length; i++) {
     emailArray.push(userLoginData[i].email);
   }
 
-  // console.log("emailArray:::::: ",emailArray)
   let error = {};
   const [validation, setValidation] = useState({});
-  const handleValue = (e) => {
-    
+  const handleValue = (e) => {  
       validation[e.target.name] = "";
-    
-    console.log({ validation }, e.target.name);
     setLoginData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
+
   const validate = (value) => {
     if (!value.email) {
       error.email = "email required";
@@ -48,7 +40,6 @@ export default function Login() {
     }
     if (emailArray.includes(value.email)) {
       const userData = userLoginData.find(({ email }) => email === value.email);
-      // console.log("userData::::", userData.password);
       const pass1 = userData.password;
       if (value.password !== pass1) {
         error.password = "Incorrect password";
@@ -68,28 +59,24 @@ export default function Login() {
     for (i = 0; i < tokenLength; i++) {
       randomToken += token.charAt(Math.floor(Math.random() * token.length));
     }
-    // console.log("stringTokebn:::::",randomToken);
+  
     return randomToken;
   };
-  const [tokenGenerate, setTokenGenerate] = useState(userToken());
-  // console.log("Token::::::::::",tokenGenerate)
+  const [tokenGenerate] = useState(userToken());
+
 
   const handleSubmit = (e) => {
-    // console.log("Insideeeeeeee");
     const errFunc = validate(loginData);
 
     setValidation(errFunc);
 
     const errorLength = Object.values(errFunc).filter((item) => item !== "");
-    // console.log("error length", errorLength.length);
 
-    if (errorLength.length === 0) {
-      // console.log("errorrrrrrr not occured");
+    if (errorLength.length === 0) {;
       localStorage.setItem("Token", tokenGenerate);
       navigate("/table");
     } else {
       e.preventDefault();
-      // console.log("errFunc");
     }
   };
 
@@ -97,7 +84,6 @@ export default function Login() {
     navigate("/reg");
   };
 
-  // const dataLocal = localStorage.getItem("token")
 
   const myvariable = {
     color: "red",
@@ -122,7 +108,6 @@ export default function Login() {
 
   const btn1 = {
     color: "white",
-    // marginLeft:"10%",
     backgroundColor: "green",
     border: "1px solid green",
     fontWeight: "bold",

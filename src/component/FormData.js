@@ -12,15 +12,13 @@ import { addTransaction, editTransaction } from "../redux/transaction";
 import { set, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function FormData() {
- 
-  const data = useSelector((state) => state.usersLoginInfo.value);
-
+  const data = useSelector((state) => state.transaction.value);
   const dispatch = useDispatch();
-
-  // const [editData, setEditData] = useState({});
+  const navigate = useNavigate();
 
   const INITIAL_STATE = {
     date: "",
@@ -43,16 +41,11 @@ export default function FormData() {
   useEffect(() => {
     const userData = data.find(({ id }) => id === userId);
     if (userData !== undefined) {
-      // setEditData(userData);
-      // console.log("editted data new :::: ", userData);
       setFormState(userData);
     }
   }, []);
 
-  // const userDataIndex = data.findIndex(({ id }) => id === userId);
-  // // console.log("userDataIndex",data[userDataIndex])
-
-  const [receiptData, setReceiptData] = useState({ receipt: "" });
+  const [receiptData, setReceiptData] = useState("");
 
   const dataMonth = [
     "january",
@@ -167,42 +160,54 @@ export default function FormData() {
     formState: { errors },
   } = useForm({ values, resolver: yupResolver(schema) });
 
+ const [flag,setFlag] = useState(0)
+ console.log("flag",flag)
+
   const handleReceipt = (e) => {
     const file = e.target.files[0];
-    // console.log("image type", file);
+    console.log("receipt", file);
     const reader = new FileReader();
     reader.onloadend = () => {
-      setReceiptData((prev) => ({
-        ...prev,
-        receipt: reader.result.toString(),
-      }));
+      alert(reader.result);
+      setReceiptData(reader.result);
     };
     reader.readAsDataURL(file);
+     setFlag(1)
   };
 
-  // console.log("receipt::::",receiptData)
+  console.log("receipt", receiptData);
 
   const onSubmit = (data1) => {
-    console.log("editedData", data1);
-
     if (!userId) {
-      const data2 = {
+      const dataAdd = {
         ...data1,
         id: Date.now(),
-        receipt: Object.values(receiptData).toString(),
+        receipt: receiptData,
       };
-      dispatch(addTransaction(data2));
-      // console.log("array", data[6]);
+      setFlag(0)
+      console.log("flagNewUser",flag)
+      dispatch(addTransaction(dataAdd));
+     
+      navigate("/table");
     } else {
-      // console.log("data1", data1);
-      dispatch(editTransaction({ userId, data1 }));
-      // data[userDataIndex] = data1;
-      // console.log("updated darta", data);
-      // setData(data);
+      console.log("receiptData:::::::",typeof(receiptData));
+      let dataEdit;
+      if(flag === 1)
+      {
+        dataEdit = {
+          ...data1,
+          receipt: receiptData,
+        }
+        setFlag(0);
+      }
+       else
+       {
+        dataEdit = data1;
+       }
+      dispatch(editTransaction({ userId, dataEdit }));
+      navigate("/table");
     }
   };
-
-
 
   return (
     <div className="container">
@@ -300,7 +305,6 @@ export default function FormData() {
             <p style={pTag}>{errors.receipt?.message}</p>
           </div>
         </div>
-        {/* <p>{validation.receipt}</p> */}
         <div className="form-group mt-2">
           <label>Notes: </label>
           <input

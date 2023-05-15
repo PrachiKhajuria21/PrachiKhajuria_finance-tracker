@@ -1,29 +1,24 @@
 import react, { useEffect } from "react";
-import { useState} from "react";
+import { useState } from "react";
 import TableData from "./TableData";
 import { useNavigate } from "react-router-dom";
-import { userContext } from "../context/context";
 import { useSelector } from "react-redux";
 
 export default function TableMerge() {
-
-  const data = useSelector((state) => state.transaction.value)
-  
+  const data = useSelector((state) => state.transaction.value);
+  console.log("data from list", data);
 
   const getDataFromLS = data;
 
-
   const [groupBy, setGroupBy] = useState({});
-  const [globalKey,setGlobalKey] = useState();
+  const [globalKey, setGlobalKey] = useState();
   const navigate = useNavigate();
 
   const handleGroup = (e) => {
     const selctKey = e.target.value;
-    // console.log("e.tagr",e.target.value)
     setGlobalKey(selctKey);
     const get = getDataFromLS.reduce(function (a, b) {
       let key = b[e.target.value];
-      // console.log("keys",key)
       if (!a[key]) {
         a[key] = [];
       }
@@ -31,31 +26,21 @@ export default function TableMerge() {
       return a;
     }, {});
     setGroupBy(get);
-   
-    
   };
 
-
   //it will call on delete functionality
-  useEffect(()=>{
+  useEffect(() => {
     const get = getDataFromLS.reduce(function (a, b) {
-      let key =b[globalKey];
-      // console.log("keyyyyyyy",globalKey)
-      // console.log("keys",key)
+      let key = b[globalKey];
       if (!a[key]) {
         a[key] = [];
       }
       a[key].push(b);
       return a;
     }, {});
-  // console.log("getttttt0",get)
     setGroupBy(get);
-  },[getDataFromLS])
+  }, [getDataFromLS]);
 
-
-
-  // console.log("gte::::",groupBy)
-  // console.log("keys::: ",Object.keys(groupBy))
   const handleRemove = () => {
     localStorage.removeItem("Token");
     navigate("/");
@@ -116,8 +101,8 @@ export default function TableMerge() {
         Object.keys(groupBy).map((data, index) => (
           <>
             {/* /<TableData key={index} data={groupBy[data]} setData={setAllData} /> */}
-         
-            <TableData key={index} data={groupBy[data]}/>
+
+            <TableData key={index} data={groupBy[data]} />
           </>
         ))
       ) : (
