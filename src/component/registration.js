@@ -2,9 +2,16 @@ import { ErrorResponse } from "@remix-run/router";
 import React,{useState} from "react";
 import Login from "./login";
 import { useNavigate } from "react-router-dom";
+import { useSelector,useDispatch } from "react-redux";
+import  {addUser} from "../redux/userLogin"
 
 export default function Registration()
 {
+  // const prevLoginData = useSelector((state) => state.userLoginInfo.value);
+  // console.log("prevLogin",prevLoginData)
+
+  const dispatch = useDispatch();
+
     const INITIAL_STATE = {
         namee:"",
         userName:"",
@@ -17,7 +24,9 @@ export default function Registration()
         setLoginData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     }
 
-    const localData = JSON.parse(localStorage.getItem("Login"));
+    // const localData = JSON.parse(localStorage.getItem("Login"));
+    const localData = useSelector((state) => state.userLoginInfo.value)
+  
     const emailArray = [];
     let i;
     for(i=0;i<localData.length;i++)
@@ -63,28 +72,21 @@ export default function Registration()
     {
          e.preventDefault();
          const errFunc = validate(loginData);
+         console.log("loginData",loginData)
          setValidation(errFunc);
 
       const errorLength = Object.values(errFunc).filter((item) => item !== "");
 
       if (errorLength.length === 0) 
       {
-          let array = JSON.parse(localStorage.getItem("Login") || "[]");
-          array.push(loginData);
- 
-          localStorage.setItem("Login", JSON.stringify(array));
-          navigate("/login")
-      }
-      else{
-        // console.log("errorrrrrrr not occured");
+         dispatch(addUser(loginData))
+       
+          navigate("/")
       }
     }
 
    
-    // const handleLogin =() =>
-    // {
-       
-    // }
+  
  
    const myvariable = {
     color:"red", 

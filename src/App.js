@@ -56,6 +56,8 @@ export default function App() {
             ></Route>
 
             <Route path="/" element={<Login />}></Route>
+            <Route path="/table" element={<TableMerge />}></Route>
+
             <Route path="/reg" element={<Registration />}></Route>
           </Routes>
         </Router>

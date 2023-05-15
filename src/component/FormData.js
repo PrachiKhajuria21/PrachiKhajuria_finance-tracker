@@ -12,12 +12,11 @@ import { addTransaction, editTransaction } from "../redux/transaction";
 import { set, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { userContext } from "../context/context";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function FormData() {
  
-  const data = useSelector((state) => state.transaction.value);
+  const data = useSelector((state) => state.usersLoginInfo.value);
 
   const dispatch = useDispatch();
 

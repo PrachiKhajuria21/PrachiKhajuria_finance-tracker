@@ -1,11 +1,16 @@
 import { ErrorResponse } from "@remix-run/router";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import {  useSelector } from  "react-redux";
+// import { addUser } from "../redux/userLogin"
 
 export default function Login() {
   const navigate = useNavigate();
-  const userLoginData = JSON.parse(localStorage.getItem("Login"));
-  // console.log("userLoginData",typeof(userLoginData))
+  // const userLoginData = JSON.parse(localStorage.getItem("Login"));
+
+  const userLoginData = useSelector((state) => state.userLoginInfo.value);
+
+  console.log("userLoginData",userLoginData)
 
   const INITIAL_STATE = {
     email: "",

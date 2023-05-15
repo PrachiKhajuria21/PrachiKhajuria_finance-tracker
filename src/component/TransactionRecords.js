@@ -44,3 +44,8 @@ export const records = [
     notes: "prachi here",
   },
 ];
+
+export const userRecords = [
+  {name:"prachi",userName:"Pra@123",email:"prachi@gmail.com",password:"Par@12354"},
+  {name:"abhay",userName:"Abhy@123",email:"abhay@gmail.com",password:"Abhay@12354"},
+  {name:"raj",userName:"Raj@123",email:"raj@gmail.com",password:"Raj@12354"}];
