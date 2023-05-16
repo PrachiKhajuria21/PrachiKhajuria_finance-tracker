@@ -1,6 +1,5 @@
 import PageMeta from "./TableComponent";
-import react, { useEffect, useState} from "react";
-
+import react, { useEffect, useState } from "react";
 
 export default function TableData({ data }) {
   const [order, setOrder] = useState("asc");
@@ -16,7 +15,7 @@ export default function TableData({ data }) {
 
   const records = 5;
   const totalRecords = data.length;
- 
+
   let pages = Math.ceil(totalRecords / records);
 
   let pageNumber = [...Array(pages + 1).keys()].slice(1);
@@ -40,7 +39,6 @@ export default function TableData({ data }) {
         temp = temp.sort((a, b) => (a[sort] < b[sort] ? -1 : 1));
 
         tempOrder = "desc";
-        
       } else if (tempOrder === "desc") {
         temp = temp.sort((a, b) => (a[sort] > b[sort] ? -1 : 1));
         tempOrder = "";
@@ -60,7 +58,8 @@ export default function TableData({ data }) {
         curData.transactionType.includes(searchValue) ||
         curData.fromAccount.includes(searchValue) ||
         curData.toAccount.includes(searchValue) ||
-        curData.notes.includes(searchValue)
+        curData.notes.includes(searchValue) ||
+        curData.amount.toString().includes(searchValue)
       ) {
         return curData;
       } else {
@@ -71,7 +70,7 @@ export default function TableData({ data }) {
     setTableData(temp);
   };
 
-  console.log("sorting order",order)
+  console.log("sorting order", order);
 
   const mystyle = {
     border: "2px solid green",
@@ -100,44 +99,33 @@ export default function TableData({ data }) {
     cursor: "pointer",
   };
 
-  const getArrow = (order) =>
-  {
-    console.log("order::::",order)
-     if(order === 'asc') 
-     {
-      return '';
-     }
-     else if(order === 'desc')
-     {
-      return '↑';
-     }
-     else
-     {
-      return '↓';
-     }
-  }
+  const getArrow = (order) => {
+    console.log("order::::", order);
+    if (order === "asc") {
+      return "";
+    } else if (order === "desc") {
+      return "↑";
+    } else {
+      return "↓";
+    }
+  };
 
- const tableHeader = {
-  padding:"5px",
-  border:"1px solid skyblue",
-  backgroundColor:"skyblue",
-  fontWeight:"bold",
-
-  
- }
- const header ={
-  padding:"10px"
- };
- const headerType = {
-  paddingLeft :"10px"
- }
- const pageStyle = {
-
-  marginLeft:"40%",
-  marginTop:"2%",
-  
- }
-
+  const tableHeader = {
+    padding: "5px",
+    border: "1px solid skyblue",
+    backgroundColor: "skyblue",
+    fontWeight: "bold",
+  };
+  const header = {
+    padding: "10px",
+  };
+  const headerType = {
+    paddingLeft: "10px",
+  };
+  const pageStyle = {
+    marginLeft: "40%",
+    marginTop: "2%",
+  };
 
   return (
     <div>
@@ -149,30 +137,57 @@ export default function TableData({ data }) {
       <table style={mystyle}>
         <tbody>
           <tr>
-            
-            <th onClick={() => handleTableData({ sort: "date" })} style={header}><button  style={tableHeader}> Transaction Date {getArrow(order)}</button>
-             
+            <th
+              onClick={() => handleTableData({ sort: "date" })}
+              style={header}
+            >
+              <button style={tableHeader}>
+                {" "}
+                Transaction Date {getArrow(order)}
+              </button>
             </th>
-            <th onClick={() => handleTableData({ sort: "month" })} ><button style={tableHeader}> Month Year {getArrow(order)}</button>
-              
+            <th onClick={() => handleTableData({ sort: "month" })}>
+              <button style={tableHeader}> Month Year {getArrow(order)}</button>
             </th>
-            <th onClick={() => handleTableData({ sort: "transactionType" })} style={headerType}><button style={tableHeader}> Transaction Type {getArrow(order)}</button>
+            <th
+              onClick={() => handleTableData({ sort: "transactionType" })}
+              style={headerType}
+            >
+              <button style={tableHeader}>
+                {" "}
+                Transaction Type {getArrow(order)}
+              </button>
             </th>
-            <th onClick={() => handleTableData({ sort: "fromAccount" })} ><button style={tableHeader}> From Account {getArrow(order)}</button>
-             
+            <th onClick={() => handleTableData({ sort: "fromAccount" })}>
+              <button style={tableHeader}>
+                {" "}
+                From Account {getArrow(order)}
+              </button>
             </th>
-            <th onClick={() => handleTableData({ sort: "toAccount" })} ><button style={tableHeader}>  To Account {getArrow(order)}</button>
-             
+            <th onClick={() => handleTableData({ sort: "toAccount" })}>
+              <button style={tableHeader}> To Account {getArrow(order)}</button>
             </th>
-            <th onClick={() => handleTableData({ sort: "amount" })}><button style={tableHeader}> Amount {getArrow(order)}</button></th>
-            <th style={headerType}><button style={tableHeader}>Receipt</button></th>
-            <th style={headerType} onClick={() => handleTableData({ sort: "notes" })}><button style={tableHeader}> Notes {getArrow(order)}</button></th>
-            <th><button  style={tableHeader}>Action</button></th>
-            <th style={headerType}><button style={tableHeader}>View</button></th>
+            <th onClick={() => handleTableData({ sort: "amount" })}>
+              <button style={tableHeader}> Amount {getArrow(order)}</button>
+            </th>
+            <th style={headerType}>
+              <button style={tableHeader}>Receipt</button>
+            </th>
+            <th
+              style={headerType}
+              onClick={() => handleTableData({ sort: "notes" })}
+            >
+              <button style={tableHeader}> Notes {getArrow(order)}</button>
+            </th>
+            <th>
+              <button style={tableHeader}>Action</button>
+            </th>
+            <th style={headerType}>
+              <button style={tableHeader}>View</button>
+            </th>
           </tr>
-  
+
           <PageMeta datar={tableData.slice(indexOfFirst, indexOfLast)} />
-         
         </tbody>
       </table>
       <div style={pageStyle}>

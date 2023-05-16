@@ -1,14 +1,10 @@
-import { ErrorResponse } from "@remix-run/router";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { Cookies } from "react-cookie";
 
 export default function Login() {
   const navigate = useNavigate();
   const userLoginData = useSelector((state) => state.userLoginInfo.value);
-
-  const cookies = new Cookies();
 
   const INITIAL_STATE = {
     email: "",
