@@ -2,7 +2,7 @@ import { ErrorResponse } from "@remix-run/router";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { addUser } from "../redux/userLogin";
+import { addUser } from "../redux/UserLogin";
 
 export default function Registration() {
   const dispatch = useDispatch();

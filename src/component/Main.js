@@ -3,12 +3,14 @@ import { useState } from "react";
 import TableData from "./TableData";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { Cookies } from "react-cookie";
 
 export default function TableMerge() {
   const data = useSelector((state) => state.transaction.value);
   console.log("data from list", data);
 
   const getDataFromLS = data;
+  const cookies = new Cookies();
 
   const [groupBy, setGroupBy] = useState({});
   const [globalKey, setGlobalKey] = useState();
@@ -42,7 +44,9 @@ export default function TableMerge() {
   }, [getDataFromLS]);
 
   const handleRemove = () => {
-    localStorage.removeItem("Token");
+    // localStorage.removeItem("Token");
+    cookies.remove("tokenCookie");
+    
     navigate("/");
   };
 

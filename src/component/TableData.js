@@ -131,6 +131,12 @@ export default function TableData({ data }) {
  const headerType = {
   paddingLeft :"10px"
  }
+ const pageStyle = {
+
+  marginLeft:"40%",
+  marginTop:"2%",
+  
+ }
 
 
   return (
@@ -169,7 +175,7 @@ export default function TableData({ data }) {
          
         </tbody>
       </table>
-      <div>
+      <div style={pageStyle}>
         {data.length > 0 &&
           pageNumber.map((number) => (
             <span

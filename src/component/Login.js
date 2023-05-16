@@ -1,12 +1,14 @@
 import { ErrorResponse } from "@remix-run/router";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {  useSelector } from  "react-redux";
+import { useSelector } from "react-redux";
+import { Cookies } from "react-cookie";
 
 export default function Login() {
   const navigate = useNavigate();
   const userLoginData = useSelector((state) => state.userLoginInfo.value);
 
+  const cookies = new Cookies();
 
   const INITIAL_STATE = {
     email: "",
@@ -23,8 +25,8 @@ export default function Login() {
 
   let error = {};
   const [validation, setValidation] = useState({});
-  const handleValue = (e) => {  
-      validation[e.target.name] = "";
+  const handleValue = (e) => {
+    validation[e.target.name] = "";
     setLoginData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
@@ -59,31 +61,36 @@ export default function Login() {
     for (i = 0; i < tokenLength; i++) {
       randomToken += token.charAt(Math.floor(Math.random() * token.length));
     }
-  
+
     return randomToken;
   };
   const [tokenGenerate] = useState(userToken());
 
-
   const handleSubmit = (e) => {
+    e.preventDefault();
     const errFunc = validate(loginData);
 
     setValidation(errFunc);
 
     const errorLength = Object.values(errFunc).filter((item) => item !== "");
 
-    if (errorLength.length === 0) {;
-      localStorage.setItem("Token", tokenGenerate);
+    if (errorLength.length === 0) {
+      var now = new Date();
+      var time = now.getTime();
+      // time += 60 * 1000;  1min
+      time += 3600 * 1000;
+      now.setTime(time);
+      document.cookie = `tokenCookie=${tokenGenerate};expires=${now.toUTCString()};path=/`;
       navigate("/table");
-    } else {
-      e.preventDefault();
     }
+    // else {
+    //   e.preventDefault();
+    // }
   };
 
   const handleRegister = () => {
     navigate("/reg");
   };
-
 
   const myvariable = {
     color: "red",

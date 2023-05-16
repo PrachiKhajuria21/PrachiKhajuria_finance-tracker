@@ -1,11 +1,7 @@
 import react, { useEffect, useRef, useState } from "react";
 
-import {
-  BrowserRouter as Router,
-  Link,
-  useLocation,
-} from "react-router-dom";
-import { addTransaction, editTransaction } from "../redux/transaction";
+import { BrowserRouter as Router, Link, useLocation,Navigate } from "react-router-dom";
+import { addTransaction, editTransaction } from "../redux/Transaction";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -118,20 +114,19 @@ export default function FormData() {
         } else {
           return true;
         }
-      })
-    .test("fileType", "Image type should be jpeg,png or jpg", (value) => {
-      console.log("image type", value[0].type);
-      if (value[0].type !== undefined) {
-        if (fileTypee.includes(value[0]?.type)) {
-          return true;
-        } else {
-          return false;
-        }
-      }else{
-        return true;
-      }
-
-    })
+      }),
+      // .test("fileType", "Image type should be jpeg,png or jpg", (value) => {
+      //   console.log("image type", value[0].type);
+      //   if (value[0].type !== undefined) {
+      //     if (fileTypee.includes(value[0]?.type)) {
+      //       return true;
+      //     } else {
+      //       return false;
+      //     }
+      //   } else {
+      //     return true;
+      //   }
+      // }),
   });
 
   const imageRef = useRef(null);
@@ -156,10 +151,10 @@ export default function FormData() {
     formState: { errors },
   } = useForm({ values, resolver: yupResolver(schema) });
 
- const [flag,setFlag] = useState(0)
- console.log("flag",flag)
+  const [flag, setFlag] = useState(0);
+  console.log("flag", flag);
 
- const [filed, setFiled] = useState();
+  const [filed, setFiled] = useState();
 
   const handleReceipt = (e) => {
     const file = e.target.files[0];
@@ -167,21 +162,14 @@ export default function FormData() {
     const reader = new FileReader();
     reader.onloadend = () => {
       setReceiptData(reader.result);
-      
     };
     reader.readAsDataURL(file);
-     setFlag(1)
-     setFiled(URL.createObjectURL(e.target.files[0]));
-
-
- 
+    setFlag(1);
+    setFiled(URL.createObjectURL(e.target.files[0]));
   };
 
   console.log("receipt", receiptData);
   // console.log("formState.receipt", formState.receipt);
-
- 
-
 
   const onSubmit = (data1) => {
     if (!userId) {
@@ -190,28 +178,25 @@ export default function FormData() {
         id: Date.now(),
         receipt: receiptData,
       };
-      setFlag(0)
-      console.log("flagNewUser",flag)
+      setFlag(0);
+      console.log("flagNewUser", flag);
       dispatch(addTransaction(dataAdd));
-     
       navigate("/table");
     } else {
-      console.log("receiptData:::::::",typeof(receiptData));
+      console.log("receiptData:::::::", typeof receiptData);
       let dataEdit;
-      if(flag === 1)
-      {
+      if (flag === 1) {
         dataEdit = {
           ...data1,
           receipt: receiptData,
-        }
+        };
         setFlag(0);
-      }
-       else
-       {
+      } else {
         dataEdit = data1;
-       }
+      }
       dispatch(editTransaction({ userId, dataEdit }));
       navigate("/table");
+
     }
   };
 
@@ -300,7 +285,7 @@ export default function FormData() {
           <div className="col-sm-18">
             {flag === 0 && <img ref={imageRef} src={formState.receipt} />}
             <img src={filed} />
-            
+
             {/* {console.log(formState.receipt)} */}
 
             <input
