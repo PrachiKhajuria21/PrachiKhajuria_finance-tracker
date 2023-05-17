@@ -16,7 +16,7 @@ import { userContext } from "../context/context";
 export default function FormData() {
   const { data, setData } = useContext(userContext);
 
-
+  // const [editData, setEditData] = useState({});
 
   const INITIAL_STATE = {
     date: "",
@@ -126,18 +126,20 @@ export default function FormData() {
           return true;
         }
       })
-      .test("fileType", "Image type should be jpeg,png or jpg", (value) => {
-        console.log("image type", value[0].type);
-        if (value[0].type !== undefined) {
-          if (fileTypee.includes(value[0]?.type)) {
-            return true;
-          } else {
-            return false;
-          }
-        } else {
-          return true;
-        }
-      }),
+      // .test("fileType", "Image type should be jpeg,png or jpg", (value) => {
+      //   console.log("image type", value[0].type);
+      //   if (value[0].type !== undefined) {
+      //     if (fileTypee.includes(value[0]?.type)) {
+      //       return true;
+      //     } else {
+      //       return false;
+      //     }
+      //   }else{
+      //     return true;
+      //   }
+
+      // })
+      ,
   });
 
   const imageRef = useRef(null);
@@ -284,14 +286,14 @@ export default function FormData() {
           <div className="col-sm-18">
             <img ref={imageRef} src={formState.receipt} />
             {console.log(formState.receipt)}
-            {formState.receipt === "" && (
+            
               <input
                 type="file"
                 className="form-control-file"
                 {...register("receipt")}
                 onChange={handleReceipt}
               ></input>
-            )}
+         
             <p style={pTag}>{errors.receipt?.message}</p>
           </div>
         </div>

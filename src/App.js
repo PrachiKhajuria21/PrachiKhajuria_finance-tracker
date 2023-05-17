@@ -8,7 +8,7 @@ import {
   Navigate,
 } from "react-router-dom";
 // import FormData from "./FormData";
-// import TableData from "./TableData"
+// import TableData from "./TableData"F
 import TableData from "./component/TableData";
 import FormData from "./component/FormData";
 import TableMerge from "./component/main";
@@ -55,8 +55,9 @@ export default function App() {
               element={tokenDemo === null ? <Login /> : <TableMerge />}
             ></Route>
 
-            <Route path="/" element={<Login />}></Route>
+            
             <Route path="/reg" element={<Registration />}></Route>
+            <Route path="/" element={<Login/>}></Route>
           </Routes>
         </Router>
       </ProviderComponent>
