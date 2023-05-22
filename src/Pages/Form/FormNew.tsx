@@ -1,8 +1,9 @@
 import React, { useState, FormEvent } from "react";
 import { useForm } from "react-hook-form";
-import { InitialStateType } from "../model";
+import { InitialStateType } from "../../model";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import "./From.css";
 
 // interface Props{
 //   todo:string;
@@ -17,8 +18,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 //   )
 // }
 
-const Form : React.FC = () => {
-  const initialState : InitialStateType = {
+const Form: React.FC = () => {
+  const initialState: InitialStateType = {
     date: "",
     month: "",
     transactionType: "",
@@ -27,10 +28,10 @@ const Form : React.FC = () => {
     amount: 0,
     receipt: "",
     id: Date.now(),
-    notes: ""
-  }
+    notes: "",
+  };
   const [formData, setFormData] = useState(initialState);
-  
+
   const dataMonth: string[] = [
     "january",
     "febrary",
@@ -92,31 +93,33 @@ const Form : React.FC = () => {
 
     receipt: yup
       .mixed()
-      .test("fileRequired", "This is required", (value:any) => {
+      .test("fileRequired", "This is required", (value: any) => {
         if (value.length === 0) {
           return false;
         } else {
           return true;
         }
       })
-      .test("fileSize", "Size should not be greater than 1mb", (value:any) => {
+      .test("fileSize", "Size should not be greater than 1mb", (value: any) => {
         if (value[0]?.size > 1024 * 1024) {
           return false;
         } else {
           return true;
         }
       })
-      .test("fileType", "Image type should be jpeg,png or jpg", (value:any) => {    
-        // console.log(value[0]?.type )  
+      .test(
+        "fileType",
+        "Image type should be jpeg,png or jpg",
+        (value: any) => {
+          // console.log(value[0]?.type )
           if (fileTypee.includes(value[0]?.type)) {
             return true;
           } else {
             return false;
           }
-       
-      }),
+        }
+      ),
   });
-  
 
   const {
     register,
@@ -124,13 +127,13 @@ const Form : React.FC = () => {
     formState: { errors },
   } = useForm({ values, resolver: yupResolver(schema) });
 
-  const onSubmit = (data:any) => {
+  const onSubmit = (data: any) => {
     // e.preventDefault();
-    console.log("Hello",data);
-
+    setFormData(data);
+    console.log("Hello", data);
   };
 
-  // console.log(formData)
+  console.log(formData);
 
   return (
     <div className="container">
@@ -146,7 +149,7 @@ const Form : React.FC = () => {
             className="form-control"
             {...register("date")}
           ></input>
-          <p >{errors.date?.message}</p>
+          <p className="ptag">{errors.date?.message}</p>
         </div>
 
         <div className="form-group mt-2">
@@ -160,7 +163,7 @@ const Form : React.FC = () => {
               </option>
             ))}
           </select>
-          <p >{errors.month?.message}</p>
+          <p className="ptag">{errors.month?.message}</p>
         </div>
         <div className="form-group mt-2">
           <label>Transaction Type: </label>
@@ -173,7 +176,7 @@ const Form : React.FC = () => {
               </option>
             ))}
           </select>
-          <p >{errors.transactionType?.message}</p>
+          <p className="ptag">{errors.transactionType?.message}</p>
         </div>
         <div className="form-group mt-2">
           <label>From Account: </label>
@@ -185,7 +188,7 @@ const Form : React.FC = () => {
               </option>
             ))}
           </select>
-          <p >{errors.fromAccount?.message}</p>
+          <p className="ptag">{errors.fromAccount?.message}</p>
         </div>
 
         <div className="form-group mt-2">
@@ -198,7 +201,7 @@ const Form : React.FC = () => {
               </option>
             ))}
           </select>
-          <p >{errors.toAccount?.message}</p>
+          <p className="ptag">{errors.toAccount?.message}</p>
         </div>
 
         <div className="form-group mt-2">
@@ -209,7 +212,7 @@ const Form : React.FC = () => {
             defaultValue={0}
             {...register("amount")}
           ></input>
-          <p >{errors.amount?.message}</p>
+          <p className="ptag">{errors.amount?.message}</p>
         </div>
 
         <div className="form-group mt-2">
@@ -227,7 +230,7 @@ const Form : React.FC = () => {
               // onChange={handleReceipt}
             ></input>
 
-            <p >{errors.receipt?.message}</p>
+            <p className="ptag">{errors.receipt?.message}</p>
           </div>
         </div>
         <div className="form-group mt-2">
@@ -238,7 +241,7 @@ const Form : React.FC = () => {
             {...register("notes")}
           />
         </div>
-        <p >{errors.notes?.message}</p>
+        <p className="ptag">{errors.notes?.message}</p>
         <div className="mt-2">
           <button type="submit" className="btn btn-primary">
             Submit
