@@ -1,7 +1,7 @@
 // import PageMeta from "./TableComponent";
 import { useEffect, useState } from "react";
 import { string } from "yup";
-import { InitialStateType } from "../../model";
+import { InitialStateType, sortt } from "../../model";
 // import PageMeta from "./TableComponent";
 // import PageMeta from "./TableComponent";
 
@@ -14,12 +14,6 @@ const TableData = ({ data }: Props) => {
   const [search, setSearch] = useState("");
 
   const [tableData, setTableData] = useState<InitialStateType[]>(data);
-
-  // useEffect(() => {
-  //   if (data && data.length > 0) {
-  //     setTableData(data);
-  //   }
-  // }, [data]);
 
   const records: number = 5;
   const totalRecords: number = data.length;
@@ -40,13 +34,13 @@ const TableData = ({ data }: Props) => {
     sort = "id",
     searchValue = search,
   }: {
-    sort?: keyof InitialStateType;
+    sort?:sortt;
     searchValue?: string;
   }) => {
     let temp = [...data];
     let tempOrder = order;
 
-    if (sort) {
+    if (sort !== "id") {
       // Sorting
       if (tempOrder === "asc") {
         temp = temp.sort((a: InitialStateType, b: InitialStateType) =>
@@ -85,7 +79,6 @@ const TableData = ({ data }: Props) => {
     setTableData(temp);
   };
 
-  console.log("orderdata", tableData);
 
   const mystyle = {
     border: "2px solid green",
@@ -227,8 +220,6 @@ const TableData = ({ data }: Props) => {
               <button style={tableHeader}>View</button>
             </th>
           </tr>
-
-          {/* <PageMeta datar={tableData} /> */}
 
           {tableData.length > 0 &&
             tableData.slice(indexOfFirst, indexOfLast).map((data, index) => (

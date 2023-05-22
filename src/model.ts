@@ -10,5 +10,6 @@ export type InitialStateType = {
     notes:string
   }
 
+  export type sortt = keyof InitialStateType ;
 
   

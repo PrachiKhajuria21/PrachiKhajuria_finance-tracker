@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 import TableData from "./TableData";
+import { InitialStateType } from "../../model";
 // import TableData from "./TableData";
 
 const TableMerge: React.FC = () => {
@@ -12,25 +13,26 @@ const TableMerge: React.FC = () => {
   //  const data : string = "abc"
   const getDataFromLS = data;
  console.log("hekmjfgnjdf",getDataFromLS)
-  const [groupBy, setGroupBy] = useState({});
-  const [globalKey, setGlobalKey] = useState();
+  const [groupBy, setGroupBy] = useState<InitialStateType[]>(data);
+  const [globalKey, setGlobalKey] = useState<string>();
   const navigate = useNavigate();
 
-  // const handleGroup = (e) => {
-  //   const selctKey = e.target.value;
-  //   setGlobalKey(selctKey);
-  //   const get = getDataFromLS.reduce(function (a, b) {
-  //     let key = b[e.target.value];
-  //     if (!a[key]) {
-  //       a[key] = [];
-  //     }
-  //     a[key].push(b);
-  //     return a;
-  //   }, {});
-  //   setGroupBy(get);
-  // };
+  const handleGroup = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    // console.log("e:::::",event.target.value)
+    const selctKey = e.target.value;
+    setGlobalKey(selctKey);
+    const get = getDataFromLS.reduce(function (a:any, b:any) {
+      let key = b[e.target.value];
+      if (!a[key]) {
+        a[key] = [];
+      }
+      a[key].push(b);
+      return a;
+    }, {});
+    setGroupBy(get);
+  };
 
-  //it will call on delete functionality
+  // it will call on delete functionality
   // useEffect(() => {
   //   const get = getDataFromLS.reduce(function (a, b) {
   //     let key = b[globalKey];
@@ -90,7 +92,7 @@ const TableMerge: React.FC = () => {
       </div>
 
       <label style={label}>Check tables here:</label>
-      <select style={selectClass} defaultValue="">
+      <select style={selectClass} defaultValue=""  onChange={handleGroup}>
         <option value="">Whole Table</option>
         <option value="month">Month-year</option>
         <option value="transactionType">Transaction-type</option>
@@ -105,15 +107,14 @@ const TableMerge: React.FC = () => {
       {Object.keys(groupBy).length > 0 ? (
         Object.keys(groupBy).map((data, index) => (
           <>
-            {/* <TableData key={index} data={groupBy[data]} setData={setAllData} /> */}
-
-            <h1>heelo</h1>
+            {/* <TableData key={index}/> */}
           </>
         ))
       ) : (
 
         <TableData data={getDataFromLS} />
 
+       
         // <h1>heelokjh</h1>
       )}
     </>
