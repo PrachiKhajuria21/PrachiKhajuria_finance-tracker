@@ -1,6 +1,8 @@
 import React, { useState, FormEvent } from "react";
 import { useForm } from "react-hook-form";
-import { initialState } from "../model";
+import { InitialStateType } from "../model";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 // interface Props{
 //   todo:string;
@@ -15,8 +17,20 @@ import { initialState } from "../model";
 //   )
 // }
 
-const Form = () => {
-  const [formData, setFormData] = useState<initialState>();
+const Form : React.FC = () => {
+  const initialState : InitialStateType = {
+    date: "",
+    month: "",
+    transactionType: "",
+    fromAccount: "",
+    toAccount: "",
+    amount: 0,
+    receipt: "",
+    id: Date.now(),
+    notes: ""
+  }
+  const [formData, setFormData] = useState(initialState);
+  
   const dataMonth: string[] = [
     "january",
     "febrary",
@@ -52,17 +66,71 @@ const Form = () => {
     "Core Realtors",
     "Big Block",
   ];
+  const fileTypee = ["image/png", "image/jpeg", "image/jpg"];
+
+  const values = formData;
+  const schema = yup.object().shape({
+    date: yup.string().required("date is required"),
+    month: yup.string().required("month is required"),
+    transactionType: yup.string().required("TransactionType is required"),
+    fromAccount: yup.string().required("From Account is required"),
+    toAccount: yup
+      .string()
+      .required("To Account is required")
+      .notOneOf(
+        [yup.ref("fromAccount")],
+        "Both the accounts should not be same"
+      ),
+    amount: yup
+      .number()
+      .required("Amount is required")
+      .min(1, "amount should be greater than 0"),
+    notes: yup
+      .string()
+      .required("Notes is required")
+      .max(250, "notes length should be less than 250"),
+
+    receipt: yup
+      .mixed()
+      .test("fileRequired", "This is required", (value:any) => {
+        if (value.length === 0) {
+          return false;
+        } else {
+          return true;
+        }
+      })
+      .test("fileSize", "Size should not be greater than 1mb", (value:any) => {
+        if (value[0]?.size > 1024 * 1024) {
+          return false;
+        } else {
+          return true;
+        }
+      })
+      .test("fileType", "Image type should be jpeg,png or jpg", (value:any) => {    
+        // console.log(value[0]?.type )  
+          if (fileTypee.includes(value[0]?.type)) {
+            return true;
+          } else {
+            return false;
+          }
+       
+      }),
+  });
+  
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm({ values, resolver: yupResolver(schema) });
 
   const onSubmit = (data:any) => {
     // e.preventDefault();
     console.log("Hello",data);
+
   };
+
+  // console.log(formData)
 
   return (
     <div className="container">
@@ -78,7 +146,7 @@ const Form = () => {
             className="form-control"
             {...register("date")}
           ></input>
-          {/* <p style={pTag}>{errors.date?.message}</p> */}
+          <p >{errors.date?.message}</p>
         </div>
 
         <div className="form-group mt-2">
@@ -92,7 +160,7 @@ const Form = () => {
               </option>
             ))}
           </select>
-          {/* <p style={pTag}>{errors.month?.message}</p> */}
+          <p >{errors.month?.message}</p>
         </div>
         <div className="form-group mt-2">
           <label>Transaction Type: </label>
@@ -105,7 +173,7 @@ const Form = () => {
               </option>
             ))}
           </select>
-          {/* <p style={pTag}>{errors.transactionType?.message}</p> */}
+          <p >{errors.transactionType?.message}</p>
         </div>
         <div className="form-group mt-2">
           <label>From Account: </label>
@@ -117,7 +185,7 @@ const Form = () => {
               </option>
             ))}
           </select>
-          {/* <p style={pTag}>{errors.fromAccount?.message}</p> */}
+          <p >{errors.fromAccount?.message}</p>
         </div>
 
         <div className="form-group mt-2">
@@ -130,7 +198,7 @@ const Form = () => {
               </option>
             ))}
           </select>
-          {/* <p style={pTag}>{errors.toAccount?.message}</p> */}
+          <p >{errors.toAccount?.message}</p>
         </div>
 
         <div className="form-group mt-2">
@@ -141,7 +209,7 @@ const Form = () => {
             defaultValue={0}
             {...register("amount")}
           ></input>
-          {/* <p style={pTag}>{errors.amount?.message}</p> */}
+          <p >{errors.amount?.message}</p>
         </div>
 
         <div className="form-group mt-2">
@@ -159,7 +227,7 @@ const Form = () => {
               // onChange={handleReceipt}
             ></input>
 
-            {/* <p style={pTag}>{errors.receipt?.message}</p> */}
+            <p >{errors.receipt?.message}</p>
           </div>
         </div>
         <div className="form-group mt-2">
@@ -170,7 +238,7 @@ const Form = () => {
             {...register("notes")}
           />
         </div>
-        {/* <p style={pTag}>{errors.notes?.message}</p> */}
+        <p >{errors.notes?.message}</p>
         <div className="mt-2">
           <button type="submit" className="btn btn-primary">
             Submit

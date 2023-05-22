@@ -1,4 +1,4 @@
-export type initialState = {
+export type InitialStateType = {
     date:string;
     month:string;
     transactionType: string;
@@ -6,7 +6,9 @@ export type initialState = {
     toAccount : string;
     amount:number;
     receipt:string;
+    id:number;
     notes:string
   }
+
 
   
