@@ -114,6 +114,8 @@ const Form: React.FC = () => {
           } else {
             return true;
           }
+        }else {
+          return true;
         }
       })
       .test("fileSize", "Size should not be greater than 1mb", (value) => {
@@ -124,6 +126,8 @@ const Form: React.FC = () => {
         } else {
           return true;
         }
+      }else {
+        return true;
       }
       })
       .test("fileType", "Image type should be jpeg,png or jpg", (value) => {
@@ -136,6 +140,7 @@ const Form: React.FC = () => {
         } else {
           return true;
         }
+
       }),
   });
 
