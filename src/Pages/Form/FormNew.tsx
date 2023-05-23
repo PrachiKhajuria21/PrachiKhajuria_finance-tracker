@@ -1,12 +1,13 @@
-import React, { useState, FormEvent } from "react";
+import React, { useState, FormEvent, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { InitialStateType } from "../../model";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import "./From.css";
-import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { addTransaction } from "../../redux/Transaction";
+import { Link, useNavigate,useLocation } from "react-router-dom";
+import { useDispatch,useSelector } from "react-redux";
+import { RootState } from "../../store";
+import { addTransaction, editTransaction } from "../../redux/Transaction";
 
 
 // interface Props{
@@ -23,6 +24,8 @@ import { addTransaction } from "../../redux/Transaction";
 // }
 
 const Form: React.FC = () => {
+  const data = useSelector((state: RootState) => state.transaction.value);
+
  const initialState: InitialStateType = {
     date: "",
     month: "",
@@ -40,6 +43,7 @@ const Form: React.FC = () => {
   const [flag, setFlag] = useState<number>(0);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [formState, setFormState] = useState(initialState);
   
 
   const dataMonth: string[] = [
@@ -79,7 +83,7 @@ const Form: React.FC = () => {
   ];
   const fileTypee = ["image/png", "image/jpeg", "image/jpg"];
 
-  const values = formData;
+  const values = formState;
   const schema = yup.object().shape({
     date: yup.string().required("date is required"),
     month: yup.string().required("month is required"),
@@ -138,6 +142,10 @@ const Form: React.FC = () => {
   } = useForm({ values, resolver: yupResolver(schema) });
 
 
+  const location = useLocation();
+  const userId = location.state;
+  console.log("userID",userId)
+
   const handleReceipt = (e:React.ChangeEvent<HTMLInputElement>) => {
     const file: File = (e.target.files as FileList)[0];
     // console.log("files:::",file)
@@ -154,31 +162,60 @@ const Form: React.FC = () => {
   // console.log("filled",filed)
   // console.log("receipt",receiptData)
 
+ 
+
+  console.log(formData);
+
+  useEffect(() => {
+    const userData = data.find(({ id }) => id === userId);
+    console.log("userData",userData)
+    if (userData !== undefined) {
+      setFormState(userData);
+    }
+  }, []);
+
   const onSubmit = (data:InitialStateType) => {
     // e.preventDefault();
     // setFormData(data);
     // console.log("Hello", data);
-    const dataAdd = {
-      ...data,
-      id: Date.now(),
-      receipt: receiptData,
-    };
-    setFlag(0);
-    dispatch(addTransaction(dataAdd));
-    navigate("/reg");
-  };
+    if(!userId)
+    {
+      const dataAdd = {
+        ...data,
+        id: Date.now(),
+        receipt: receiptData,
+      };
+      setFlag(0);
+      dispatch(addTransaction(dataAdd));
+      navigate("/reg");
+    } else {
+  
+      let dataEdit;
+      if (flag === 1) {
+        dataEdit = {
+          ...data,
+          receipt: receiptData,
+        };
+        setFlag(0);
+      } else {
+        dataEdit = data;
+      }
+      dispatch(editTransaction({ userId, dataEdit }));
+      navigate("/reg");
 
-  console.log(formData);
+    }
+   
+  };
  
   return (
     <div className="container">
-      {/* <Link to="/table"> */}
+      <Link to="/reg">
       <button>Back</button>
-      {/* </Link> */}
+      </Link>
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="form-group mt-2">
-          <label>Transaction Data: </label>
+          <label>Transaction Date: </label>
           <input
             type="date"
             className="form-control"
@@ -253,8 +290,8 @@ const Form: React.FC = () => {
         <div className="form-group mt-2">
           <label>Receipt: </label>
           <div className="col-sm-18">
-            {/* {flag === 0 && <img ref={imageRef} src={formState.receipt} />}
-            <img src={filed} /> */}
+            {flag === 0 && <img src={formState.receipt} />}
+            <img src={filed} />
 
             {/* {console.log(formState.receipt)} */}
 

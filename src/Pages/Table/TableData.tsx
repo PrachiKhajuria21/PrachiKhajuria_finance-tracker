@@ -2,16 +2,23 @@
 import { useEffect, useState } from "react";
 import { string } from "yup";
 import { InitialStateType, sortt } from "../../model";
-// import PageMeta from "./TableComponent";
-// import PageMeta from "./TableComponent";
+import { useDispatch } from "react-redux";
+import { deleteTransaction } from "../../redux/Transaction";
+import { useNavigate } from "react-router-dom";
+
 
 interface Props {
   data: InitialStateType[];
 }
 
+
+
 const TableData = ({ data }: Props) => {
   const [order, setOrder] = useState<string>("asc");
   const [search, setSearch] = useState("");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
 
   const [tableData, setTableData] = useState<InitialStateType[]>(data);
 
@@ -148,6 +155,18 @@ const TableData = ({ data }: Props) => {
     marginTop: "2%",
   };
 
+  const handleRemove = (index:number) => {
+    
+    console.log(":::::::remove::::::::::",index)
+    dispatch(deleteTransaction({ index, data }));
+
+  };
+  const handleEdit = (index:number) => {
+    navigate("/", { state: index });
+  };
+
+
+
   return (
     <div>
       <div>
@@ -241,7 +260,7 @@ const TableData = ({ data }: Props) => {
                 <td>
                   <button
                     style={edit}
-                    // onClick={() => handleEdit(data.id)}
+                    onClick={() => handleEdit(data.id)}
                   >
                     Edit
                   </button>
@@ -249,7 +268,7 @@ const TableData = ({ data }: Props) => {
                 <td>
                   <button
                     style={edit}
-                    // onClick={() => handleRemove(datar.id)}
+                    onClick={() => handleRemove(data.id)}
                   >
                     Remove
                   </button>

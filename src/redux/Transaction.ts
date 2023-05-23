@@ -14,21 +14,22 @@ export const transactionSlice = createSlice({
       state.value.push(action.payload);
     },
     editTransaction(state, action) {
-      // console.log("Editted data",action.payload.dataEdit)
+      console.log("Editted data",action.payload.dataEdit)
       let dataToUpdate = state.value.map((data) =>
         data.id === action.payload.userId ? action.payload.dataEdit : data
       );
       console.log("daya", dataToUpdate);
       state.value = dataToUpdate;
     },
-    // deleteTransaction(state, action) {
-    //   const data = action.payload.data;
-    //   const newArray = data.filter(({ id }) => id !== action.payload.index);
-
-    //   state.value = newArray;
-    // },
+    deleteTransaction(state, action) {
+      const data = action.payload.data;
+      // console.log("dataa",data)
+      const newArray = data.filter(({ id }:{id:number}) => id !== action.payload.index);
+      //  {console.log("newArray",newArray)}
+      state.value = newArray;
+    },
   },
 });
 
-export const { addTransaction, editTransaction} =
+export const { addTransaction, editTransaction,deleteTransaction} =
   transactionSlice.actions;
