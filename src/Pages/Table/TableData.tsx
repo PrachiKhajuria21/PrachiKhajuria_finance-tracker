@@ -118,7 +118,7 @@ const TableData = ({ data }: Props) => {
   }, [data]);
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("search::::", event.target.value);
+    // console.log("search::::", event.target.value);
     setSearch(event.target.value);
   };
 
@@ -156,15 +156,12 @@ const TableData = ({ data }: Props) => {
   };
 
   const handleRemove = (index:number) => {
-    
-    console.log(":::::::remove::::::::::",index)
     dispatch(deleteTransaction({ index, data }));
 
   };
   const handleEdit = (index:number) => {
     navigate("/", { state: index });
   };
-
 
 
   return (

@@ -53,7 +53,6 @@ const Registration: React.FC = () => {
     }
 
     const regex1 = /((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).{6,20})/;
-    console.log("password", value);
     const pass1 = regex1.test(value.password as string);
     if (!value.password || !pass1) {
       error.password = "Please enter valid password";
@@ -85,7 +84,7 @@ const Registration: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const errFunc: any = validate(loginData);
+    const errFunc = validate(loginData);
     setValidation(errFunc);
 
     const errorLength = Object.values(errFunc).filter((item) => item !== "");

@@ -2,3 +2,13 @@
 {
     color:red;
 }
+.backBtn {
+    color: white;
+    margin-Left: 50%;
+    background-color: red;
+    border: 1px solid red;
+    font-weight: "bold";
+}
+.submitBtn  {
+    margin-left: 50%;
+  };

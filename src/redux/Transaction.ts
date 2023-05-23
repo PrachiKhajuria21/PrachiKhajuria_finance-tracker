@@ -2,8 +2,6 @@ import { createSlice } from "@reduxjs/toolkit";
 import { records } from "../Pages/Table/TransactionRecords";
 // import { records } from "../component/TransactionRecords";
 
-
-
 export const transactionSlice = createSlice({
   name: "transaction",
   initialState: {
@@ -14,7 +12,7 @@ export const transactionSlice = createSlice({
       state.value.push(action.payload);
     },
     editTransaction(state, action) {
-      console.log("Editted data",action.payload.dataEdit)
+      console.log("Editted data", action.payload.dataEdit);
       let dataToUpdate = state.value.map((data) =>
         data.id === action.payload.userId ? action.payload.dataEdit : data
       );
@@ -22,14 +20,14 @@ export const transactionSlice = createSlice({
       state.value = dataToUpdate;
     },
     deleteTransaction(state, action) {
-      const data = action.payload.data;
       // console.log("dataa",data)
-      const newArray = data.filter(({ id }:{id:number}) => id !== action.payload.index);
-      //  {console.log("newArray",newArray)}
-      state.value = newArray;
+      const newArray = state.value.filter(
+        ({ id }: { id: number }) => id !== action.payload.index
+      );
+        state.value = newArray;
     },
   },
 });
 
-export const { addTransaction, editTransaction,deleteTransaction} =
+export const { addTransaction, editTransaction, deleteTransaction } =
   transactionSlice.actions;

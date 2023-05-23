@@ -13,20 +13,18 @@ interface GroupByType {
 }
 const TableMerge: React.FC = () => {
   const data = useSelector((state: RootState) => state.transaction.value);
-  //  const data : string = "abc"
+
   const getDataFromLS = data;
-  console.log("hekmjfgnjdf", getDataFromLS);
+
   const [groupBy, setGroupBy] = useState<GroupByType>({});
   const [globalKey, setGlobalKey] = useState<any>();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    console.log("state updated!");
-  }, [groupBy]);
-
+  // useEffect(() => {
+  //   console.log("state updated!");
+  // }, [groupBy]);
 
   const handleGroup = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    // console.log("e:::::",event.target.value)
     const selctKey = e.target.value;
     setGlobalKey(selctKey);
     if (e.target.value === "") {
@@ -40,14 +38,15 @@ const TableMerge: React.FC = () => {
       a[key].push(b);
       return a;
     }, {});
-   setGroupBy(get);
+    setGroupBy(get);
   };
-
 
   // it will call on delete functionality
   useEffect(() => {
-    console.log("keyssssss",globalKey)
-    const get = getDataFromLS.reduce(function (a:any, b:any) {
+    console.log("locaql", data);
+
+    const get = getDataFromLS.reduce(function (a: any, b: any) {
+    
       let key = b[globalKey];
       if (!a[key]) {
         a[key] = [];
@@ -55,18 +54,13 @@ const TableMerge: React.FC = () => {
       a[key].push(b);
       return a;
     }, {});
-    // console.log("called",get)
     setGroupBy(get);
-    
   }, [getDataFromLS]);
 
-  console.log("groupByData",groupBy)
+  console.log("data", getDataFromLS);
 
   const handleRemove = () => {
-    // localStorage.removeItem("Token");
-    // cookies.remove("tokenCookie");
     document.cookie = "tokenCookie= ";
-
     navigate("/logged");
   };
 
@@ -131,7 +125,6 @@ const TableMerge: React.FC = () => {
         <>
           <TableData data={getDataFromLS} />
         </>
-        // <h1>heelokjh</h1>
       )}
     </>
   );

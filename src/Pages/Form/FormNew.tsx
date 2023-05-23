@@ -4,11 +4,10 @@ import { InitialStateType } from "../../model";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import "./From.css";
-import { Link, useNavigate,useLocation } from "react-router-dom";
-import { useDispatch,useSelector } from "react-redux";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
 import { addTransaction, editTransaction } from "../../redux/Transaction";
-
 
 // interface Props{
 //   todo:string;
@@ -26,7 +25,7 @@ import { addTransaction, editTransaction } from "../../redux/Transaction";
 const Form: React.FC = () => {
   const data = useSelector((state: RootState) => state.transaction.value);
 
- const initialState: InitialStateType = {
+  const initialState: InitialStateType = {
     date: "",
     month: "",
     transactionType: "",
@@ -38,13 +37,12 @@ const Form: React.FC = () => {
     notes: "",
   };
   const [formData, setFormData] = useState(initialState);
-  const [receiptData, setReceiptData] = React.useState<any>("");
+  const [receiptData, setReceiptData] = React.useState<string | ArrayBuffer | null>("");
   const [filed, setFiled] = useState<string>();
   const [flag, setFlag] = useState<number>(0);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [formState, setFormState] = useState(initialState);
-  
 
   const dataMonth: string[] = [
     "january",
@@ -107,14 +105,15 @@ const Form: React.FC = () => {
 
     receipt: yup
       .mixed()
-      .test("fileRequired", "This is required", (value: any) => {
+      .test("fileRequired", "This is required", (value:any) => {
+        console.log("fileType",value.length)
         if (value.length === 0) {
           return false;
         } else {
           return true;
         }
       })
-      .test("fileSize", "Size should not be greater than 1mb", (value: any) => {
+      .test("fileSize", "Size should not be greater than 1mb", (value:any) => {
         if (value[0]?.size > 1024 * 1024) {
           return false;
         } else {
@@ -125,11 +124,15 @@ const Form: React.FC = () => {
         "fileType",
         "Image type should be jpeg,png or jpg",
         (value: any) => {
-          // console.log(value[0]?.type )
-          if (fileTypee.includes(value[0]?.type)) {
+          if (value instanceof FileList) {
+            if (fileTypee.includes(value[0]?.type)) {
+              return true;
+            } else {
+              return false;
+            }
+          }
+          if (typeof value === "string" || value.length === 0) {
             return true;
-          } else {
-            return false;
           }
         }
       ),
@@ -141,17 +144,14 @@ const Form: React.FC = () => {
     formState: { errors },
   } = useForm({ values, resolver: yupResolver(schema) });
 
-
   const location = useLocation();
   const userId = location.state;
-  console.log("userID",userId)
 
-  const handleReceipt = (e:React.ChangeEvent<HTMLInputElement>) => {
+  const handleReceipt = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file: File = (e.target.files as FileList)[0];
-    // console.log("files:::",file)
-   
     const reader = new FileReader();
     reader.onloadend = () => {
+ 
       setReceiptData(reader.result);
     };
     reader.readAsDataURL(file);
@@ -160,26 +160,21 @@ const Form: React.FC = () => {
   };
 
   // console.log("filled",filed)
-  // console.log("receipt",receiptData)
-
- 
-
-  console.log(formData);
+  console.log("receipt",receiptData)
 
   useEffect(() => {
     const userData = data.find(({ id }) => id === userId);
-    console.log("userData",userData)
     if (userData !== undefined) {
       setFormState(userData);
     }
   }, []);
+  console.log("formSatate", formState);
 
-  const onSubmit = (data:InitialStateType) => {
+  const onSubmit = (data: InitialStateType) => {
     // e.preventDefault();
     // setFormData(data);
     // console.log("Hello", data);
-    if(!userId)
-    {
+    if (!userId) {
       const dataAdd = {
         ...data,
         id: Date.now(),
@@ -189,7 +184,6 @@ const Form: React.FC = () => {
       dispatch(addTransaction(dataAdd));
       navigate("/reg");
     } else {
-  
       let dataEdit;
       if (flag === 1) {
         dataEdit = {
@@ -202,15 +196,13 @@ const Form: React.FC = () => {
       }
       dispatch(editTransaction({ userId, dataEdit }));
       navigate("/reg");
-
     }
-   
   };
- 
+
   return (
     <div className="container">
       <Link to="/reg">
-      <button>Back</button>
+        <button className="backBtn">Back</button>
       </Link>
 
       <form onSubmit={handleSubmit(onSubmit)}>
