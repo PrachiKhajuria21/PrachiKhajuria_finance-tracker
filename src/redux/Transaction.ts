@@ -3,6 +3,7 @@ import { records } from "../Pages/Table/TransactionRecords";
 // import { records } from "../component/TransactionRecords";
 
 
+
 export const transactionSlice = createSlice({
   name: "transaction",
   initialState: {
@@ -20,14 +21,14 @@ export const transactionSlice = createSlice({
       console.log("daya", dataToUpdate);
       state.value = dataToUpdate;
     },
-    deleteTransaction(state, action) {
-      const data = action.payload.data;
-      const newArray = data.filter(({ id }) => id !== action.payload.index);
+    // deleteTransaction(state, action) {
+    //   const data = action.payload.data;
+    //   const newArray = data.filter(({ id }) => id !== action.payload.index);
 
-      state.value = newArray;
-    },
+    //   state.value = newArray;
+    // },
   },
 });
 
-export const { addTransaction, editTransaction, deleteTransaction } =
+export const { addTransaction, editTransaction} =
   transactionSlice.actions;

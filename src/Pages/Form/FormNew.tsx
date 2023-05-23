@@ -4,6 +4,10 @@ import { InitialStateType } from "../../model";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import "./From.css";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { addTransaction } from "../../redux/Transaction";
+
 
 // interface Props{
 //   todo:string;
@@ -19,7 +23,7 @@ import "./From.css";
 // }
 
 const Form: React.FC = () => {
-  const initialState: InitialStateType = {
+ const initialState: InitialStateType = {
     date: "",
     month: "",
     transactionType: "",
@@ -31,6 +35,12 @@ const Form: React.FC = () => {
     notes: "",
   };
   const [formData, setFormData] = useState(initialState);
+  const [receiptData, setReceiptData] = React.useState<any>("");
+  const [filed, setFiled] = useState<string>();
+  const [flag, setFlag] = useState<number>(0);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  
 
   const dataMonth: string[] = [
     "january",
@@ -127,14 +137,39 @@ const Form: React.FC = () => {
     formState: { errors },
   } = useForm({ values, resolver: yupResolver(schema) });
 
-  const onSubmit = (data: any) => {
+
+  const handleReceipt = (e:React.ChangeEvent<HTMLInputElement>) => {
+    const file: File = (e.target.files as FileList)[0];
+    // console.log("files:::",file)
+   
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setReceiptData(reader.result);
+    };
+    reader.readAsDataURL(file);
+    setFlag(1);
+    setFiled(URL.createObjectURL(file));
+  };
+
+  // console.log("filled",filed)
+  // console.log("receipt",receiptData)
+
+  const onSubmit = (data:InitialStateType) => {
     // e.preventDefault();
-    setFormData(data);
-    console.log("Hello", data);
+    // setFormData(data);
+    // console.log("Hello", data);
+    const dataAdd = {
+      ...data,
+      id: Date.now(),
+      receipt: receiptData,
+    };
+    setFlag(0);
+    dispatch(addTransaction(dataAdd));
+    navigate("/reg");
   };
 
   console.log(formData);
-
+ 
   return (
     <div className="container">
       {/* <Link to="/table"> */}
@@ -227,7 +262,7 @@ const Form: React.FC = () => {
               type="file"
               className="form-control-file"
               {...register("receipt")}
-              // onChange={handleReceipt}
+              onChange={handleReceipt}
             ></input>
 
             <p className="ptag">{errors.receipt?.message}</p>

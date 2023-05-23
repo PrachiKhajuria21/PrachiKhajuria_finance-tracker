@@ -84,7 +84,7 @@ const TableMerge: React.FC = () => {
   };
 
   const handleSignIn = () => {
-    navigate("/form");
+    navigate("/");
   };
   const logout = {
     color: "white",
