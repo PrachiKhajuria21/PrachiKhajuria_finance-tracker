@@ -8,12 +8,15 @@ import TableData from "./TableData";
 import { InitialStateType } from "../../model";
 // import TableData from "./TableData";
 
+interface GroupByType {
+  [key: string]: InitialStateType[];
+}
 const TableMerge: React.FC = () => {
   const data = useSelector((state: RootState) => state.transaction.value);
   //  const data : string = "abc"
   const getDataFromLS = data;
- console.log("hekmjfgnjdf",getDataFromLS)
-  const [groupBy, setGroupBy] = useState<InitialStateType[]>(data);
+  console.log("hekmjfgnjdf", getDataFromLS);
+  const [groupBy, setGroupBy] = useState<GroupByType>({});
   const [globalKey, setGlobalKey] = useState<string>();
   const navigate = useNavigate();
 
@@ -21,7 +24,10 @@ const TableMerge: React.FC = () => {
     // console.log("e:::::",event.target.value)
     const selctKey = e.target.value;
     setGlobalKey(selctKey);
-    const get = getDataFromLS.reduce(function (a:any, b:any) {
+    if (e.target.value === "") {
+      setGroupBy({});
+    }
+    const get = getDataFromLS.reduce(function (a: any, b: any) {
       let key = b[e.target.value];
       if (!a[key]) {
         a[key] = [];
@@ -29,9 +35,15 @@ const TableMerge: React.FC = () => {
       a[key].push(b);
       return a;
     }, {});
+
+    // console.log(get);
+
     setGroupBy(get);
   };
 
+  useEffect(() => {
+    console.log("state updated!");
+  }, [groupBy]);
   // it will call on delete functionality
   // useEffect(() => {
   //   const get = getDataFromLS.reduce(function (a, b) {
@@ -92,7 +104,7 @@ const TableMerge: React.FC = () => {
       </div>
 
       <label style={label}>Check tables here:</label>
-      <select style={selectClass} defaultValue=""  onChange={handleGroup}>
+      <select style={selectClass} defaultValue="" onChange={handleGroup}>
         <option value="">Whole Table</option>
         <option value="month">Month-year</option>
         <option value="transactionType">Transaction-type</option>
@@ -107,14 +119,13 @@ const TableMerge: React.FC = () => {
       {Object.keys(groupBy).length > 0 ? (
         Object.keys(groupBy).map((data, index) => (
           <>
-            {/* <TableData key={index}/> */}
+            <TableData key={index} data={groupBy[data as keyof GroupByType]} />
           </>
         ))
       ) : (
-
-        <TableData data={getDataFromLS} />
-
-       
+        <>
+          <TableData data={getDataFromLS} />
+        </>
         // <h1>heelokjh</h1>
       )}
     </>
@@ -122,3 +133,5 @@ const TableMerge: React.FC = () => {
 };
 
 export default TableMerge;
+
+// groupBy[data]

@@ -34,7 +34,7 @@ const TableData = ({ data }: Props) => {
     sort = "id",
     searchValue = search,
   }: {
-    sort?:sortt;
+    sort?: sortt;
     searchValue?: string;
   }) => {
     let temp = [...data];
@@ -79,7 +79,6 @@ const TableData = ({ data }: Props) => {
     setTableData(temp);
   };
 
-
   const mystyle = {
     border: "2px solid green",
     margin: "auto",
@@ -107,6 +106,10 @@ const TableData = ({ data }: Props) => {
     handleTableData({ searchValue: search });
   }, [search]);
 
+  useEffect(() => {
+    setTableData(data);
+  }, [data]);
+
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     console.log("search::::", event.target.value);
     setSearch(event.target.value);
@@ -118,7 +121,7 @@ const TableData = ({ data }: Props) => {
     cursor: "pointer",
   };
 
-  const getArrow = (order:string) => {
+  const getArrow = (order: string) => {
     if (order === "asc") {
       return "";
     } else if (order === "desc") {
@@ -177,7 +180,7 @@ const TableData = ({ data }: Props) => {
               </button>
             </th>
             <th
-              onClick={() => handleTableData({ sort: "fromAccount"})}
+              onClick={() => handleTableData({ sort: "fromAccount" })}
               style={headerType}
             >
               <button style={tableHeader}>
@@ -193,7 +196,7 @@ const TableData = ({ data }: Props) => {
                 {getArrow(order)}
               </button>
             </th>
-            <th onClick={() => handleTableData({ sort: "amount"})}>
+            <th onClick={() => handleTableData({ sort: "amount" })}>
               <button style={tableHeader}>
                 {" "}
                 Amount
