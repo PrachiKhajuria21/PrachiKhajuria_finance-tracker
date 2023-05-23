@@ -25,9 +25,9 @@ export default function App() {
         <Routes>
           <Route element={<PrivateRouter />}>
             <Route element={<TableMerge />} path="/reg"  />
-            <Route element={<Form />} path="/" />
+            <Route element={<Form />} path="/form" />
           </Route>
-          <Route element={<Login />} path="/logged"/>
+          <Route element={<Login />} path="/"/>
           <Route element={<Registration />} path="/login" />
         
         </Routes>

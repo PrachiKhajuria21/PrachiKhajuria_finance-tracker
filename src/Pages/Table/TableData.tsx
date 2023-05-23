@@ -11,8 +11,6 @@ interface Props {
   data: InitialStateType[];
 }
 
-
-
 const TableData = ({ data }: Props) => {
   const [order, setOrder] = useState<string>("asc");
   const [search, setSearch] = useState("");
@@ -56,7 +54,7 @@ const TableData = ({ data }: Props) => {
 
         tempOrder = "desc";
       } else if (tempOrder === "desc") {
-        temp = temp.sort((a: any, b: any) => (a[sort] > b[sort] ? -1 : 1));
+        temp = temp.sort((a: InitialStateType, b: InitialStateType) => (a[sort] > b[sort] ? -1 : 1));
         tempOrder = "";
       } else {
         temp = data;
@@ -160,7 +158,7 @@ const TableData = ({ data }: Props) => {
 
   };
   const handleEdit = (index:number) => {
-    navigate("/", { state: index });
+    navigate("/form", { state: index });
   };
 
 

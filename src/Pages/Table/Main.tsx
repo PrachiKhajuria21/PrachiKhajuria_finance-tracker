@@ -11,13 +11,15 @@ import { InitialStateType } from "../../model";
 interface GroupByType {
   [key: string]: InitialStateType[];
 }
+
+
 const TableMerge: React.FC = () => {
   const data = useSelector((state: RootState) => state.transaction.value);
 
   const getDataFromLS = data;
 
   const [groupBy, setGroupBy] = useState<GroupByType>({});
-  const [globalKey, setGlobalKey] = useState<any>();
+  const [globalKey, setGlobalKey] = useState<string>("");
   const navigate = useNavigate();
 
   // useEffect(() => {
@@ -27,10 +29,11 @@ const TableMerge: React.FC = () => {
   const handleGroup = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selctKey = e.target.value;
     setGlobalKey(selctKey);
+    // console.log("globalKey",typeof(globalKey))
     if (e.target.value === "") {
       setGroupBy({});
     }
-    const get = getDataFromLS.reduce(function (a: any, b: any) {
+    const get = getDataFromLS.reduce(function (a: GroupByType, b: any) {
       let key = b[e.target.value];
       if (!a[key]) {
         a[key] = [];
@@ -43,9 +46,7 @@ const TableMerge: React.FC = () => {
 
   // it will call on delete functionality
   useEffect(() => {
-    console.log("locaql", data);
-
-    const get = getDataFromLS.reduce(function (a: any, b: any) {
+     const get = getDataFromLS.reduce(function (a: GroupByType, b: any) {
     
       let key = b[globalKey];
       if (!a[key]) {
@@ -61,7 +62,7 @@ const TableMerge: React.FC = () => {
 
   const handleRemove = () => {
     document.cookie = "tokenCookie= ";
-    navigate("/logged");
+    navigate("/");
   };
 
   const selectClass = {
@@ -83,7 +84,7 @@ const TableMerge: React.FC = () => {
   };
 
   const handleSignIn = () => {
-    navigate("/");
+    navigate("/form");
   };
   const logout = {
     color: "white",

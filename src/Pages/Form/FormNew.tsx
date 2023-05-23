@@ -37,7 +37,9 @@ const Form: React.FC = () => {
     notes: "",
   };
   const [formData, setFormData] = useState(initialState);
-  const [receiptData, setReceiptData] = React.useState<string | ArrayBuffer | null>("");
+  const [receiptData, setReceiptData] = React.useState<
+    string | ArrayBuffer | null
+  >("");
   const [filed, setFiled] = useState<string>();
   const [flag, setFlag] = useState<number>(0);
   const navigate = useNavigate();
@@ -105,37 +107,36 @@ const Form: React.FC = () => {
 
     receipt: yup
       .mixed()
-      .test("fileRequired", "This is required", (value:any) => {
-        console.log("fileType",value.length)
-        if (value.length === 0) {
-          return false;
-        } else {
-          return true;
+      .test("fileRequired", "This is required", (value) => {
+        if (value instanceof FileList) {
+          if (value.length === 0) {
+            return false;
+          } else {
+            return true;
+          }
         }
       })
-      .test("fileSize", "Size should not be greater than 1mb", (value:any) => {
+      .test("fileSize", "Size should not be greater than 1mb", (value) => {
+        // console.log("fileTypeSize", typeof value[0].size);
+        if (value instanceof FileList) {
         if (value[0]?.size > 1024 * 1024) {
           return false;
         } else {
           return true;
         }
+      }
       })
-      .test(
-        "fileType",
-        "Image type should be jpeg,png or jpg",
-        (value: any) => {
-          if (value instanceof FileList) {
-            if (fileTypee.includes(value[0]?.type)) {
-              return true;
-            } else {
-              return false;
-            }
-          }
-          if (typeof value === "string" || value.length === 0) {
+      .test("fileType", "Image type should be jpeg,png or jpg", (value) => {
+        if (value instanceof FileList) {
+          if (fileTypee.includes(value[0]?.type)) {
             return true;
+          } else {
+            return false;
           }
+        } else {
+          return true;
         }
-      ),
+      }),
   });
 
   const {
@@ -151,7 +152,6 @@ const Form: React.FC = () => {
     const file: File = (e.target.files as FileList)[0];
     const reader = new FileReader();
     reader.onloadend = () => {
- 
       setReceiptData(reader.result);
     };
     reader.readAsDataURL(file);
@@ -160,7 +160,7 @@ const Form: React.FC = () => {
   };
 
   // console.log("filled",filed)
-  console.log("receipt",receiptData)
+  console.log("receipt", receiptData);
 
   useEffect(() => {
     const userData = data.find(({ id }) => id === userId);
