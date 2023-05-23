@@ -177,7 +177,7 @@ const TableData = ({ data }: Props) => {
       <table style={mystyle}>
         <tbody>
           <tr>
-            <th>ID</th>
+           
             <th
               style={headerType}
               onClick={() => handleTableData({ sort: "date" })}
@@ -246,8 +246,7 @@ const TableData = ({ data }: Props) => {
           {tableData.length > 0 &&
             tableData.slice(indexOfFirst, indexOfLast).map((data, index) => (
               <tr key={index}>
-                <td>{data.id}</td>
-                <td style={tableHeaderTrans}>{data.date}</td>
+               <td style={tableHeaderTrans}>{data.date}</td>
                 <td style={tableHeaderTrans}>{data.month}</td>
                 <td style={tableHeaderTrans}>{data.transactionType}</td>
                 <td style={tableHeaderTrans}>{data.fromAccount}</td>

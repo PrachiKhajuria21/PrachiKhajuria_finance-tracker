@@ -67,7 +67,7 @@ const TableMerge: React.FC = () => {
     // cookies.remove("tokenCookie");
     document.cookie = "tokenCookie= ";
 
-    navigate("/");
+    navigate("/logged");
   };
 
   const selectClass = {

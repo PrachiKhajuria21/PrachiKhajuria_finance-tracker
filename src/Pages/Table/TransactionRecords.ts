@@ -1,5 +1,5 @@
 
-import { InitialStateType } from "../../model";
+import { InitialStateType, UserStateType } from "../../model";
 
 export const records : InitialStateType[] = [
   {
@@ -48,21 +48,21 @@ export const records : InitialStateType[] = [
   },
 ];
 
-export const userRecords = [
+export const userRecords:UserStateType[] = [
   {
-    name: "prachi",
+    namee: "prachi",
     userName: "Pra@123",
     email: "prachi@gmail.com",
     password: "Par@12354",
   },
   {
-    name: "abhay",
+    namee: "abhay",
     userName: "Abhy@123",
     email: "abhay@gmail.com",
     password: "Abhay@12354",
   },
   {
-    name: "raj",
+    namee: "raj",
     userName: "Raj@123",
     email: "raj@gmail.com",
     password: "Raj@12354",
