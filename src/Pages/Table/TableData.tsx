@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { string } from "yup";
 import { InitialStateType, sortt } from "../../model";
 import { useDispatch } from "react-redux";
-import { deleteTransaction } from "../../redux/Transaction";
+import {deleteTransactionn } from "../../redux/Transaction";
 import { useNavigate } from "react-router-dom";
 
 
@@ -154,7 +154,7 @@ const TableData = ({ data }: Props) => {
   };
 
   const handleRemove = (index:number) => {
-    dispatch(deleteTransaction({ index, data }));
+    dispatch(deleteTransactionn(index));
 
   };
   const handleEdit = (index:number) => {

@@ -5,6 +5,17 @@ import { InitialStateType } from "../model";
 // import { InitialStateType } from "../model";
 // import { records } from "../component/TransactionRecords";
 
+
+
+interface PsersonState {
+  value: InitialStateType[];
+}
+
+const initialState: PsersonState = {
+  value: [],
+};
+// const initialState:any;
+
 export const fetchData: any = createAsyncThunk(
   "data/fetch",
   async (thunkAPI) => {
@@ -17,28 +28,26 @@ export const fetchData: any = createAsyncThunk(
   }
 );
 
-interface PsersonState {
-  value: InitialStateType[];
-}
 
-const initialState: PsersonState = {
-  value: [],
-};
-// const initialState:any;
+export const deleteTransactionn: any = createAsyncThunk(
+  "delete/fetch",
+  async (id,thunkAPI) => {
+    console.log("CheckID",id)
+    const response = await fetch(`http://localhost:2000/user/${id}`, {
+      method: "DELETE",
+    });
+    // console.log("API CALL", response);
+    const data = response.json();
+    return data;
+  }
+);
 
 export const transactionSlice = createSlice({
   name: "transaction",
   initialState,
   reducers: {
     addTransaction(state, action) {
-      // state.value.push(action.payload);
-      // console.log("actionPayload",action.payload)
-      axios.post("http://localhost:2000/user", action.payload);
-      // .then((response)=>{
-      //   console.log(response)
-      // },(error)=>{
-      //   console.log(error)
-      // });
+      axios.post("http://localhost:2000/user", action.payload);   
     },
     editTransaction(state, action) {
       console.log("Editted data", action.payload.dataEdit);
@@ -47,22 +56,26 @@ export const transactionSlice = createSlice({
       );
       console.log("daya", dataToUpdate);
       state.value = dataToUpdate;
-    },
-    deleteTransaction(state, action) {
-      // console.log("dataa",data)
-      const newArray = state.value?.filter(
-        ({ id }: { id: number }) => id !== action.payload.index
-      );
-      state.value = newArray;
-    },
+    }
+    // deleteTransaction(state, action) {
+    //   // console.log("dataa",data)
+    //   const newArray = state.value?.filter(
+    //     ({ id }: { id: number }) => id !== action.payload.index
+    //   );
+    //   state.value = newArray;
+    // },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchData.fulfilled, (state, action) => {
-      console.log("EXTRA REDUCER", fetchData);
       state.value = action.payload;
+    })
+    builder.addCase(deleteTransactionn.fulfilled,(state,action)=>{
+      state.value=action.payload
     });
+
+
   },
 });
 
-export const { addTransaction, editTransaction, deleteTransaction } =
+export const { addTransaction, editTransaction } =
   transactionSlice.actions;
