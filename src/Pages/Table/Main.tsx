@@ -14,6 +14,7 @@ interface GroupByType {
 
 
 const TableMerge: React.FC = () => {
+
   const data = useSelector((state: RootState) => state.transaction.value);
 
   const getDataFromLS = data;

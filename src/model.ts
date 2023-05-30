@@ -29,4 +29,5 @@ export type ErrorLoginType = {
   email: string;
   password: string;
 };
+
 export type sortt = keyof InitialStateType;

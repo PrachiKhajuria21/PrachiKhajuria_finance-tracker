@@ -164,7 +164,6 @@ const Form: React.FC = () => {
     setFiled(URL.createObjectURL(file));
   };
 
-  // console.log("filled",filed)
   console.log("receipt", receiptData);
 
   useEffect(() => {
@@ -176,9 +175,7 @@ const Form: React.FC = () => {
   console.log("formSatate", formState);
 
   const onSubmit = (data: InitialStateType) => {
-    // e.preventDefault();
-    // setFormData(data);
-    // console.log("Hello", data);
+    
     if (!userId) {
       const dataAdd = {
         ...data,
@@ -289,8 +286,6 @@ const Form: React.FC = () => {
           <div className="col-sm-18">
             {flag === 0 && <img src={formState.receipt} />}
             <img src={filed} />
-
-            {/* {console.log(formState.receipt)} */}
 
             <input
               type="file"
