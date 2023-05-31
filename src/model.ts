@@ -5,7 +5,7 @@ export type InitialStateType = {
   fromAccount: string;
   toAccount: string;
   amount: number;
-  receipt: string;
+  receipt:  string;
   id: number;
   notes: string;
 };

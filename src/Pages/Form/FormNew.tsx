@@ -7,7 +7,7 @@ import "./From.css";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
-import { addTransaction, editTransaction } from "../../redux/Transaction";
+import {editTransaction, editTransactionn, insertData } from "../../redux/Transaction";
 
 // interface Props{
 //   todo:string;
@@ -114,21 +114,21 @@ const Form: React.FC = () => {
           } else {
             return true;
           }
-        }else {
+        } else {
           return true;
         }
       })
       .test("fileSize", "Size should not be greater than 1mb", (value) => {
         // console.log("fileTypeSize", typeof value[0].size);
         if (value instanceof FileList) {
-        if (value[0]?.size > 1024 * 1024) {
-          return false;
+          if (value[0]?.size > 1024 * 1024) {
+            return false;
+          } else {
+            return true;
+          }
         } else {
           return true;
         }
-      }else {
-        return true;
-      }
       })
       .test("fileType", "Image type should be jpeg,png or jpg", (value) => {
         if (value instanceof FileList) {
@@ -140,7 +140,6 @@ const Form: React.FC = () => {
         } else {
           return true;
         }
-
       }),
   });
 
@@ -175,7 +174,6 @@ const Form: React.FC = () => {
   console.log("formSatate", formState);
 
   const onSubmit = (data: InitialStateType) => {
-    
     if (!userId) {
       const dataAdd = {
         ...data,
@@ -183,7 +181,7 @@ const Form: React.FC = () => {
         receipt: receiptData,
       };
       setFlag(0);
-      dispatch(addTransaction(dataAdd));
+      dispatch(insertData(dataAdd));
       navigate("/reg");
     } else {
       let dataEdit;
@@ -196,7 +194,7 @@ const Form: React.FC = () => {
       } else {
         dataEdit = data;
       }
-      dispatch(editTransaction({ userId, dataEdit }));
+      dispatch(editTransactionn({ userId, dataEdit }));
       navigate("/reg");
     }
   };
