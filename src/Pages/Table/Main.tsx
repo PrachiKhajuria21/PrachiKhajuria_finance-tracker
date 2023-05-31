@@ -59,7 +59,7 @@ const TableMerge: React.FC = () => {
     setGroupBy(get);
   }, [getDataFromLS]);
 
-  console.log("data", getDataFromLS);
+  // console.log("data", getDataFromLS);
 
   const handleRemove = () => {
     document.cookie = "tokenCookie= ";
